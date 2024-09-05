@@ -1,10 +1,14 @@
-import { tokensList, WETH } from "@/utils/constants";
+import { loanPercentage, tokensList, WETH } from "@/utils/constants";
 import { IoChevronDownOutline } from "react-icons/io5";
 import { Image } from "./Common";
 import { useEffect, useState } from "react";
 import { apiFetcher } from "@/utils/api";
 import { PriceApiResponse } from "@/pages/api/price";
-import { getEthBalance, getTokenBalance } from "@/utils/web3";
+import {
+  getEthBalance,
+  getTokenBalance,
+  roundToSixDecimals,
+} from "@/utils/web3";
 import { useAccount } from "wagmi";
 import { ShowWhen } from "./Utils";
 import { useRouter } from "next/router";
@@ -61,10 +65,8 @@ function TokenInput({
         `/api/price?token=${tokenAddress}`
       );
 
-      if (value) {
-        const usdValue = value * (tokenPrice.data.data?.priceUsd || 0);
-        setUsdValue(Number(usdValue.toFixed(2)));
-      }
+      const usdValue = (value || 0) * (tokenPrice.data.data?.priceUsd || 0);
+      setUsdValue(Number(usdValue.toFixed(2)));
     };
 
     getPrice();
@@ -72,6 +74,7 @@ function TokenInput({
 
   // Max Balance
   const maxBalance = () => onChange(tokenBalance || 0);
+  const tokenIsEth = tokenAddress === WETH;
 
   return (
     <div className="bg-zinc-700 p-3 rounded-lg border-[1px] border-zinc-500/75 flex flex-col gap-2 w-full">
@@ -81,24 +84,25 @@ function TokenInput({
 
       <div className="flex gap-4 justify-between items-center w-full">
         <input
-          type="number"
+          type="text"
           className="bg-inherit outline-none text-2xl lg:text-3xl max-w-[180px] lg:max-w-[200px] flex-grow"
           placeholder="0"
           onChange={(e) => {
-            const value = Number(e.target.value);
-            onChange(value);
+            const value = e.target.value;
+            if (!isNaN(Number(value || 0)))
+              onChange(value as unknown as number);
           }}
           value={value || ""}
         />
 
-        <button className="p-1 rounded-full bg-black uppercase flex gap-1 items-center justify-between h-fit ml-auto">
+        <button className="p-1 rounded-full bg-black uppercase flex gap-1 items-center justify-between h-fit ml-auto pr-2">
           <Image
             className="w-6 aspect-square rounded-full mr-1"
             src={logoURI}
             alt={symbol}
           />
           <span className="font-semibold lg:text-lg">{symbol}</span>
-          <IoChevronDownOutline className="mr-2" />
+          <ShowWhen component={<IoChevronDownOutline />} when={!tokenIsEth} />
         </button>
       </div>
 
@@ -124,7 +128,7 @@ function TokenInput({
                 Max
               </button>
             }
-            when={tokenAddress !== WETH}
+            when={!tokenIsEth}
           />
         </div>
       </div>
@@ -160,14 +164,15 @@ export function Swap() {
   // ------------------------------ On change ------------------------------
   const onInputAmountChange = async (value: number) => {
     setInputTokenAmount(value);
-    const outputAmount = value * (tokenPrice?.priceNative || 0);
-    setOutputTokenAmount(outputAmount);
+    const outputAmount =
+      value * (tokenPrice?.priceNative || 0) * loanPercentage;
+    setOutputTokenAmount(roundToSixDecimals(outputAmount));
   };
 
   const onOutputAmountChange = (value: number) => {
     setOutputTokenAmount(value);
-    const inputAmount = value / (tokenPrice?.priceNative || 0);
-    setInputTokenAmount(inputAmount);
+    const inputAmount = value / (tokenPrice?.priceNative || 0) / loanPercentage;
+    setInputTokenAmount(roundToSixDecimals(inputAmount));
   };
 
   return (

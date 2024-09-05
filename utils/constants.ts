@@ -229,6 +229,7 @@ export const erc20Abi = [
 
 export const WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
 export const USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
+export const loanPercentage = 0.4;
 
 export const tokensList: { [key: string]: TokenInfo } = {
   "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2": {

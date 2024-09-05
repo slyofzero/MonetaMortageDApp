@@ -24,11 +24,13 @@ export async function getTokenBalance(
 export async function getEthBalance(address: string): Promise<number> {
   try {
     const weiBalance = await web3.eth.getBalance(address);
-    const ethBalance = Number(
-      parseFloat(Number(ethers.formatEther(weiBalance)).toFixed(6))
-    );
+    const ethBalance = roundToSixDecimals(ethers.formatEther(weiBalance));
     return ethBalance;
   } catch (error) {
     return 0;
   }
+}
+
+export function roundToSixDecimals(num: string | number | BigInt) {
+  return Number(parseFloat(Number(num).toFixed(6)));
 }

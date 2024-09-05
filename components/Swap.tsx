@@ -12,6 +12,7 @@ import {
 import { useAccount } from "wagmi";
 import { ShowWhen } from "./Utils";
 import { useRouter } from "next/router";
+import { useLoan } from "@/state";
 
 interface TokenInputProps {
   id: string;
@@ -19,7 +20,7 @@ interface TokenInputProps {
   tokenAddress: string;
   // eslint-disable-next-line
   onChange: (value: number) => void;
-  value: number | null;
+  value: number | string | null;
 }
 
 function TokenInput({
@@ -35,6 +36,10 @@ function TokenInput({
   const [tokenBalance, setTokenBalance] = useState<number>();
   const [usdValue, setUsdValue] = useState<number>();
   const { address, isConnected } = useAccount();
+
+  const { setLoan } = useLoan();
+
+  const tokenIsEth = tokenAddress === WETH;
 
   // Get balance
   useEffect(() => {
@@ -65,16 +70,31 @@ function TokenInput({
         `/api/price?token=${tokenAddress}`
       );
 
-      const usdValue = (value || 0) * (tokenPrice.data.data?.priceUsd || 0);
+      const tokenUsdPrice = tokenPrice.data.data?.priceUsd;
+      if (!tokenUsdPrice || !value) return;
+
+      const usdValue = Number(value) * tokenUsdPrice;
       setUsdValue(Number(usdValue.toFixed(2)));
+
+      if (!tokenIsEth) {
+        setLoan((prev) => ({
+          ...prev,
+          collateralUsdValueAtLoan: Number(usdValue.toFixed(2)),
+          collateralUsdPriceAtLoan: tokenUsdPrice,
+        }));
+      } else {
+        setLoan((prev) => ({
+          ...prev,
+          ethLentUsd: Number(usdValue.toFixed(2)),
+        }));
+      }
     };
 
     getPrice();
-  }, [value, tokenAddress]);
+  }, [setLoan, tokenAddress, value, tokenIsEth]);
 
   // Max Balance
   const maxBalance = () => onChange(tokenBalance || 0);
-  const tokenIsEth = tokenAddress === WETH;
 
   return (
     <div className="bg-zinc-700 p-3 rounded-lg border-[1px] border-zinc-500/75 flex flex-col gap-2 w-full">
@@ -128,7 +148,7 @@ function TokenInput({
                 Max
               </button>
             }
-            when={!tokenIsEth}
+            when={tokenBalance && !tokenIsEth}
           />
         </div>
       </div>
@@ -137,42 +157,44 @@ function TokenInput({
 }
 
 export function Swap() {
-  const [inputTokenAmount, setInputTokenAmount] = useState<null | number>(null);
-  const [outputTokenAmount, setOutputTokenAmount] = useState<null | number>(null); //prettier-ignore
-  const [inputToken, setInputToken] = useState<string>("");
   const [tokenPrice, setTokenPrice] = useState<PriceApiResponse["data"]>();
   const router = useRouter();
   const { token } = router.query;
 
+  const { loan, setLoan } = useLoan();
+
   useEffect(() => {
-    if (token) setInputToken(String(token));
-  }, [token]);
+    if (token) setLoan((prev) => ({ ...prev, collateralToken: String(token) }));
+  }, [setLoan, token]);
 
   // ------------------------------ Get Token Price ------------------------------
   useEffect(() => {
-    const getPrice = async () => {
-      const tokenPrice = await apiFetcher<PriceApiResponse>(
-        `/api/price?token=${inputToken}`
-      );
-      setTokenPrice(tokenPrice.data.data);
-    };
-    const intervalId = setInterval(getPrice, 30 * 1e3);
-    getPrice();
-    return () => clearInterval(intervalId);
-  }, [inputToken, inputTokenAmount]);
+    if (loan.collateralToken) {
+      const getPrice = async () => {
+        const tokenPrice = await apiFetcher<PriceApiResponse>(
+          `/api/price?token=${loan.collateralToken}`
+        );
+        setTokenPrice(tokenPrice.data.data);
+      };
+
+      const intervalId = setInterval(getPrice, 30 * 1e3);
+      getPrice();
+      return () => clearInterval(intervalId);
+    }
+  }, [loan.collateralToken]);
 
   // ------------------------------ On change ------------------------------
   const onInputAmountChange = async (value: number) => {
-    setInputTokenAmount(value);
+    setLoan((prev) => ({ ...prev, collateralAmount: value }));
     const outputAmount =
       value * (tokenPrice?.priceNative || 0) * loanPercentage;
-    setOutputTokenAmount(roundToSixDecimals(outputAmount));
+    setLoan((prev) => ({ ...prev, ethLent: roundToSixDecimals(outputAmount) }));
   };
 
   const onOutputAmountChange = (value: number) => {
-    setOutputTokenAmount(value);
+    setLoan((prev) => ({ ...prev, ethLent: value }));
     const inputAmount = value / (tokenPrice?.priceNative || 0) / loanPercentage;
-    setInputTokenAmount(roundToSixDecimals(inputAmount));
+    setLoan((prev) => ({ ...prev, collateralAmount: roundToSixDecimals(inputAmount) })); //prettier-ignore
   };
 
   return (
@@ -180,16 +202,16 @@ export function Swap() {
       <TokenInput
         id="mortageAmount"
         label="Mortage"
-        tokenAddress={inputToken}
+        tokenAddress={loan.collateralToken}
         onChange={onInputAmountChange}
-        value={inputTokenAmount}
+        value={loan.collateralAmount}
       />
       <TokenInput
         id="loanAmount"
         label="Loaned"
         tokenAddress={WETH}
         onChange={onOutputAmountChange}
-        value={outputTokenAmount}
+        value={loan.ethLent}
       />
     </div>
   );

@@ -1,16 +1,17 @@
 import { JWTKeyName } from "./constants";
 
 // ------------------------------ API requests ------------------------------
-export async function apiFetcher<T>(url: string) {
-  const response = await fetch(url);
+export async function apiFetcher<T>(url: string, headers?: Headers) {
+  const response = await fetch(url, { headers });
   const data = (await response.json()) as T;
   return { response: response.status, data };
 }
 
-export async function apiPoster<T>(url: string, body: any) {
+export async function apiPoster<T>(url: string, body: any, headers?: Headers) {
   const response = await fetch(url, {
     method: "POST",
     body: JSON.stringify(body),
+    headers,
   });
   const data = (await response.json()) as T;
   return { response: response.status, data };
@@ -22,7 +23,15 @@ export async function clientFetcher<T>(url: string) {
   const headers = new Headers();
   headers.append("authorization", token);
 
-  const response = await fetch(url, { headers });
-  const data = (await response.json()) as T;
-  return { response: response.status, data };
+  const response = await apiFetcher(url, headers);
+  return response;
+}
+
+export async function clientPoster<T>(url: string, body: any) {
+  const token = localStorage.getItem(JWTKeyName) || "";
+  const headers = new Headers();
+  headers.append("authorization", token);
+
+  const response = await apiPoster(url, body, headers);
+  return response;
 }

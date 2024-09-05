@@ -1,6 +1,6 @@
 import { useAtom, atom } from "jotai";
 
-interface Loan {
+export interface LoanFromState {
   collateralToken: string;
   collateralAmount: number | string | null;
   collateralUsdValueAtLoan: number | null;
@@ -12,7 +12,7 @@ interface Loan {
 
 export const defaultLoanDuration = 4;
 
-const defaultLoan: Loan = {
+const defaultLoan: LoanFromState = {
   collateralToken: "",
   collateralAmount: null,
   collateralUsdPriceAtLoan: null,
@@ -21,7 +21,7 @@ const defaultLoan: Loan = {
   ethLent: null,
   ethLentUsd: null,
 };
-const loanAtom = atom<Loan>(defaultLoan);
+const loanAtom = atom<LoanFromState>(defaultLoan);
 
 export function useLoan() {
   const [loan, setLoan] = useAtom(loanAtom);

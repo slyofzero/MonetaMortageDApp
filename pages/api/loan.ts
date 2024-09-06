@@ -3,6 +3,7 @@ import { LoanFromState } from "@/state";
 import { StoredLoan } from "@/types";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { nanoid } from "nanoid";
+import { Timestamp } from "firebase-admin/firestore";
 
 export interface LoanApiRequestBody extends LoanFromState {
   user: string;
@@ -59,8 +60,14 @@ export default async function getSwapQuote(
 
     const body: Partial<StoredLoan> = JSON.parse(req.body);
     const { id, ...updates } = body;
-
     if (!id) return res.status(400).json({ message: "Mortage ID is missing" });
+
+    // Handling loan active date
+    if (updates.loanActiveAt) {
+      const timeStamp = new Date(updates.loanActiveAt as unknown as string);
+      const loanActiveAt = Timestamp.fromDate(timeStamp);
+      updates.loanActiveAt = loanActiveAt;
+    }
 
     await updateDocumentById<StoredLoan>({
       collectionName: "mortages",

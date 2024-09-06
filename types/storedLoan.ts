@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase-admin/firestore";
+
 export interface StoredLoan {
   id?: string;
   collateralToken: string;
@@ -11,4 +13,5 @@ export interface StoredLoan {
   user: string;
   collateralDepositTxn?: string;
   ethLentTxn?: string;
+  loanActiveAt?: Timestamp;
 }

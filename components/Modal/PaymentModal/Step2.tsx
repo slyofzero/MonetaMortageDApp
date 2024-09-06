@@ -29,6 +29,7 @@ export function Step2() {
               id: paymentStepData.id,
               ethLentTxn: txnHash,
               status: "PAID",
+              loanActiveAt: new Date().toISOString(),
             },
             "PUT"
           );

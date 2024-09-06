@@ -30,7 +30,7 @@ export function Modal({ children, setShowModal, size }: Props) {
           role="dialog"
           tabIndex={-1}
           className={classNames(
-            "flex flex-col relative bg-black border-[1px] border-solid border-white/50 z-50 box-border outline-none sm:mx-6 sm:my-16 shadow-small overflow-y-hidden w-full mx-4 my-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-neutral-900",
+            "flex flex-col relative bg-black border-[1px] border-solid border-white/50 z-50 box-border outline-none sm:mx-6 sm:my-16 shadow-small overflow-y-hidden w-full mx-4 my-auto rounded-xl py-16 md:rounded-2xl shadow-input bg-neutral-900",
             size === "lg" ? "max-w-[40rem]" : "max-w-md"
           )}
           id=":rh:"

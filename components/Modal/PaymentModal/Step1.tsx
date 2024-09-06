@@ -62,9 +62,9 @@ export function Step1() {
   );
 
   return (
-    <div className="flex items-center justify-center text-lg">
-      Depositting{" "}
-      <span className="text-yellow-400 font-bold mx-2 flex items-center">
+    <div className="flex items-center justify-center lg:text-lg whitespace-nowrap flex-wrap">
+      Depositing{" "}
+      <span className="text-yellow-400 font-bold mx-2 flex items-center flex-wrap">
         {collateralAmount} {symbol}
       </span>{" "}
       as collateral...

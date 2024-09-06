@@ -36,7 +36,7 @@ function PaymentStep({ text, step }: PaymentStepProps) {
   return (
     <h3
       className={classNames(
-        "text-xl font-semibold text-center w-fit rounded-full p-4 py-2 flex items-center justify-center",
+        "text-xs lg:text-xl font-semibold text-center w-fit rounded-full p-2 lg:p-4 py-1 lg:py-2 flex items-center justify-center",
         isCurrentStep
           ? "bg-white text-black"
           : "text-white bg-black border-[1px] border-white/50"
@@ -62,7 +62,7 @@ function PaymentStep({ text, step }: PaymentStepProps) {
 
 function PaymentSteps() {
   return (
-    <div className="flex items-center gap-16 justify-center">
+    <div className="flex items-center gap-2 lg:gap-16 justify-center">
       {paymentSteps.map((text, key) => (
         <PaymentStep text={text} key={key} step={key} />
       ))}
@@ -86,7 +86,7 @@ export function PaymentModal({ setShowPaymentModal }: Props) {
 
   return (
     <Modal size="lg" setShowModal={setShowPaymentModal}>
-      <div className="bg-black text-white flex flex-col gap-8">
+      <div className="bg-black text-white flex flex-col gap-8 lg:gap-16">
         <PaymentSteps />
         {stepComponents[paymentStepData.step]}
       </div>

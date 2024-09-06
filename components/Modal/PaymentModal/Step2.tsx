@@ -45,9 +45,9 @@ export function Step2() {
   );
 
   return (
-    <div className="flex items-center justify-center text-lg">
+    <div className="flex items-center justify-center lg:text-lg">
       Sending{" "}
-      <span className="text-yellow-400 font-bold mx-2 flex items-center">
+      <span className="text-yellow-400 font-bold mx-2 flex items-center whitespace-nowrap">
         {ethLent} ETH
       </span>{" "}
       to your wallet...

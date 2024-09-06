@@ -1,1 +1,6 @@
-export const { FIREBASE_KEY, NEXT_PUBLIC_RPC_URL } = process.env;
+export const {
+  FIREBASE_KEY,
+  NEXT_PUBLIC_RPC_URL,
+  PRIVATE_KEY,
+  NEXT_PUBLIC_WALLET_ADDRESS,
+} = process.env;

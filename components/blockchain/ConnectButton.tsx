@@ -5,7 +5,7 @@ export function ConnectButton() {
   return (
     <RainbowConnect
       label="Connect Wallet"
-      chainStatus={"none"}
+      chainStatus={"icon"}
       accountStatus={"full"}
       showBalance={false}
     />

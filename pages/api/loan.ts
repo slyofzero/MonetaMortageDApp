@@ -3,6 +3,10 @@ import { LoanFromState } from "@/state";
 import { StoredLoan } from "@/types";
 import type { NextApiRequest, NextApiResponse } from "next";
 
+export interface LoanApiRequestBody extends LoanFromState {
+  user: string;
+}
+
 export interface LoanApiResponse {
   message: string;
 }
@@ -18,7 +22,7 @@ export default async function getSwapQuote(
       if (!req.body)
         return res.status(400).json({ message: "Request body is missing" });
 
-      const body: LoanFromState = JSON.parse(req.body);
+      const body: LoanApiRequestBody = JSON.parse(req.body);
       const parsedBody: StoredLoan = {
         ...body,
         collateralAmount: Number(body.collateralAmount),

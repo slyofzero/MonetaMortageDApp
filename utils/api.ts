@@ -23,7 +23,7 @@ export async function clientFetcher<T>(url: string) {
   const headers = new Headers();
   headers.append("authorization", token);
 
-  const response = await apiFetcher(url, headers);
+  const response = await apiFetcher<T>(url, headers);
   return response;
 }
 
@@ -32,6 +32,6 @@ export async function clientPoster<T>(url: string, body: any) {
   const headers = new Headers();
   headers.append("authorization", token);
 
-  const response = await apiPoster(url, body, headers);
+  const response = await apiPoster<T>(url, body, headers);
   return response;
 }

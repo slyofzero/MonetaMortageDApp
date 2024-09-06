@@ -7,4 +7,5 @@ export interface StoredLoan {
   ethLentUsd: number;
   duration: number;
   status: "PENDING" | "EXPIRED" | "PAID";
+  user: string;
 }

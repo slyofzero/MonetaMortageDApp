@@ -4,18 +4,20 @@ import { Swap } from "../Swap";
 import { ShowWhen } from "../Utils";
 import { ConnectButton } from "../blockchain";
 import { classNames } from "@/utils";
-import { useLoan } from "@/state";
+import { useLoan, usePaymentStep } from "@/state";
 import { useEffect, useState } from "react";
 import { getTokenBalance } from "@/utils/web3";
 import { clientPoster } from "@/utils/api";
+import { PaymentModal } from "../Modal/PaymentModal";
 
 export function Mortage() {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { loan } = useLoan();
-  const { address } = useAccount();
   const [insufficientBalance, setInsufficientBalance] = useState(false);
   const [userCollateralTokenBalance, setUserCollateralTokenBalance] =
     useState(0);
+  const [openPaymentModel, setOpenPaymentModal] = useState(false);
+  const { resetPaymentStepData } = usePaymentStep();
 
   // Get balance
   useEffect(() => {
@@ -42,7 +44,13 @@ export function Mortage() {
   const completeLoan = async () => {
     if (insufficientBalance) return;
 
-    const response = await clientPoster("/api/loan", loan);
+    // const response = await clientPoster("/api/loan", {
+    //   ...loan,
+    //   user: address,
+    // });
+    // setOpenPaymentModal(response.response === 200);
+    resetPaymentStepData();
+    setOpenPaymentModal(true);
   };
 
   const submitButton = (
@@ -63,6 +71,11 @@ export function Mortage() {
     <div className="flex-grow flex flex-col gap-8 items-center justify-center">
       <Swap />
       <DurationSlider />
+
+      <ShowWhen
+        component={<PaymentModal setShowPaymentModal={setOpenPaymentModal} />}
+        when={openPaymentModel}
+      />
 
       <ShowWhen
         component={submitButton}

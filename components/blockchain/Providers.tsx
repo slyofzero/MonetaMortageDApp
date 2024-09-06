@@ -17,7 +17,7 @@ import { WagmiProvider } from "wagmi";
 const { wallets } = getDefaultWallets();
 
 const config = getDefaultConfig({
-  appName: "Cloud AI",
+  appName: "MonetaMortageDApp",
   projectId: "YOUR_PROJECT_ID",
   wallets: [
     ...wallets,
@@ -26,7 +26,7 @@ const config = getDefaultConfig({
       wallets: [argentWallet, trustWallet, ledgerWallet],
     },
   ],
-  chains: [mainnet, sepolia],
+  chains: [sepolia],
   ssr: true,
 });
 

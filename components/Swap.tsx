@@ -160,8 +160,22 @@ export function Swap() {
   const [tokenPrice, setTokenPrice] = useState<PriceApiResponse["data"]>();
   const router = useRouter();
   const { token } = router.query;
-
+  const [vaultEthBalance, setVaultEthBalance] = useState(0);
   const { loan, setLoan } = useLoan();
+
+  // Get vault balance
+  useEffect(() => {
+    const getPrice = async () => {
+      const balance = await getEthBalance(
+        String(process.env.NEXT_PUBLIC_VAULT_ADDRESS)
+      );
+      setVaultEthBalance(roundToSixDecimals(balance));
+    };
+
+    const intervalId = setInterval(getPrice, 30 * 1e3);
+    getPrice();
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     if (token) setLoan((prev) => ({ ...prev, collateralToken: String(token) }));
@@ -185,20 +199,34 @@ export function Swap() {
 
   // ------------------------------ On change ------------------------------
   const onInputAmountChange = async (value: number) => {
-    setLoan((prev) => ({ ...prev, collateralAmount: value }));
-    const outputAmount =
-      value * (tokenPrice?.priceNative || 0) * loanPercentage;
+    let outputAmount = value * (tokenPrice?.priceNative || 0) * loanPercentage;
+    let inputAmount = value;
+
+    if (outputAmount > vaultEthBalance) {
+      outputAmount = vaultEthBalance;
+      inputAmount = roundToSixDecimals(vaultEthBalance / (tokenPrice?.priceNative || 0) / loanPercentage); //prettier-ignore
+    }
+
+    setLoan((prev) => ({ ...prev, collateralAmount: inputAmount }));
     setLoan((prev) => ({ ...prev, ethLent: roundToSixDecimals(outputAmount) }));
   };
 
   const onOutputAmountChange = (value: number) => {
-    setLoan((prev) => ({ ...prev, ethLent: value }));
-    const inputAmount = value / (tokenPrice?.priceNative || 0) / loanPercentage;
+    let inputAmount = value / (tokenPrice?.priceNative || 0) / loanPercentage;
+    let outputAmount = value;
+
+    if (outputAmount > vaultEthBalance) {
+      outputAmount = vaultEthBalance;
+      inputAmount = roundToSixDecimals(vaultEthBalance / (tokenPrice?.priceNative || 0) / loanPercentage); //prettier-ignore
+    }
+
+    setLoan((prev) => ({ ...prev, ethLent: outputAmount }));
     setLoan((prev) => ({ ...prev, collateralAmount: roundToSixDecimals(inputAmount) })); //prettier-ignore
   };
 
   return (
     <div className="p-2 border-[1px] border-white/30 rounded-xl flex flex-col gap-1">
+      <h3>Vault holds {vaultEthBalance} ETH</h3>
       <TokenInput
         id="mortageAmount"
         label="Mortage"

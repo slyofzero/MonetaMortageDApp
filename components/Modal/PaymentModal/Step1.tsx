@@ -1,48 +1,65 @@
+import { LoanApiResponse } from "@/pages/api/loan";
 import { useLoan, usePaymentStep } from "@/state";
+import { clientPoster } from "@/utils/api";
 import { tokensList } from "@/utils/constants";
 import { useEffect } from "react";
 import { erc20Abi } from "viem";
-import { sepolia } from "viem/chains";
-import { useAccount, useWriteContract } from "wagmi";
+import { mainnet } from "viem/chains";
+import { useWriteContract } from "wagmi";
 
 export function Step1() {
   const { loan } = useLoan();
-  const { chainId } = useAccount();
   const { collateralToken, collateralAmount } = loan;
   const { symbol, decimals } = tokensList[collateralToken] || {};
   const mainWalletAddress = String(
-    process.env.NEXT_PUBLIC_WALLET_ADDRESS
+    process.env.NEXT_PUBLIC_VAULT_ADDRESS
   ) as `0x${string}`;
 
-  const { writeContract, isPending, isSuccess, data } = useWriteContract();
-  const { paymentStepData, setPaymentStepData } = usePaymentStep();
+  const { writeContract, isSuccess, data } = useWriteContract();
+  const { setPaymentStepData, paymentStepData } = usePaymentStep();
 
   const toSendAmount = BigInt(collateralAmount || 0) * 10n ** BigInt(decimals);
 
-  console.log(isPending, isSuccess, data);
+  // WRITE CONTRACT
+  useEffect(
+    () => {
+      writeContract({
+        chainId: mainnet.id,
+        abi: erc20Abi,
+        address: String(collateralToken) as `0x${string}`,
+        functionName: "transfer",
+        args: [mainWalletAddress, toSendAmount],
+      });
+    },
+    // eslint-disable-next-line
+    []
+  );
 
-  useEffect(() => {
-    // writeContract({
-    //   chainId: chainId,
-    //   abi: erc20Abi,
-    //   address: String(collateralToken) as `0x${string}`,
-    //   functionName: "transfer",
-    //   args: [mainWalletAddress, toSendAmount],
-    // });
-    writeContract({
-      chainId: sepolia.id,
-      abi: erc20Abi,
-      address: "0xa29232e38A8736Eea77352D7e0313C53FD92b741",
-      functionName: "transfer",
-      args: ["0x164Bc39CeA3d1bdB52D00C72A65C412741A04FBb", BigInt(100 * 1e18)],
-    });
-  }, []);
-
-  useEffect(() => {
-    if (isSuccess && data) {
-      setPaymentStepData((prev) => ({ ...prev, depositTxn: data, step: 1 }));
-    }
-  }, [isSuccess, data, setPaymentStepData]);
+  // ON SUCCESS
+  useEffect(
+    () => {
+      if (data) {
+        const updateMortageDepositLink = async () => {
+          await clientPoster<LoanApiResponse>(
+            "/api/loan",
+            {
+              id: paymentStepData.id,
+              collateralDepositTxn: data,
+            },
+            "PUT"
+          );
+          setPaymentStepData((prev) => ({
+            ...prev,
+            depositTxn: data,
+            step: 1,
+          }));
+        };
+        updateMortageDepositLink();
+      }
+    },
+    // eslint-disable-next-line
+    [isSuccess, data]
+  );
 
   return (
     <div className="flex items-center justify-center text-lg">

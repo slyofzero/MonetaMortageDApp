@@ -26,7 +26,7 @@ const config = getDefaultConfig({
       wallets: [argentWallet, trustWallet, ledgerWallet],
     },
   ],
-  chains: [sepolia],
+  chains: [mainnet],
   ssr: true,
 });
 

@@ -1,4 +1,5 @@
 export interface StoredLoan {
+  id?: string;
   collateralToken: string;
   collateralAmount: number;
   collateralUsdValueAtLoan: number;
@@ -8,4 +9,6 @@ export interface StoredLoan {
   duration: number;
   status: "PENDING" | "EXPIRED" | "PAID";
   user: string;
+  collateralDepositTxn?: string;
+  ethLentTxn?: string;
 }

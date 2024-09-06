@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { getTokenBalance } from "@/utils/web3";
 import { clientPoster } from "@/utils/api";
 import { PaymentModal } from "../Modal/PaymentModal";
+import { LoanApiResponse } from "@/pages/api/loan";
 
 export function Mortage() {
   const { isConnected, address } = useAccount();
@@ -17,7 +18,7 @@ export function Mortage() {
   const [userCollateralTokenBalance, setUserCollateralTokenBalance] =
     useState(0);
   const [openPaymentModel, setOpenPaymentModal] = useState(false);
-  const { resetPaymentStepData } = usePaymentStep();
+  const { resetPaymentStepData, setPaymentStepData } = usePaymentStep();
 
   // Get balance
   useEffect(() => {
@@ -44,13 +45,19 @@ export function Mortage() {
   const completeLoan = async () => {
     if (insufficientBalance) return;
 
-    // const response = await clientPoster("/api/loan", {
-    //   ...loan,
-    //   user: address,
-    // });
-    // setOpenPaymentModal(response.response === 200);
-    resetPaymentStepData();
-    setOpenPaymentModal(true);
+    const response = await clientPoster<LoanApiResponse>("/api/loan", {
+      ...loan,
+      user: address,
+    });
+
+    const responseIsOk = response.response === 200;
+    const loanId = response.data.id;
+
+    if (responseIsOk && loanId) {
+      setOpenPaymentModal(response.response === 200);
+      resetPaymentStepData();
+      setPaymentStepData((prev) => ({ ...prev, id: loanId }));
+    }
   };
 
   const submitButton = (

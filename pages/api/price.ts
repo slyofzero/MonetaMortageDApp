@@ -52,7 +52,7 @@ export default async function getSwapQuote(
     return res.status(200).json(responseData);
   } catch (error) {
     // eslint-disable-next-line
-    console.error("Error fetching swap quote from ParaSwap:", error);
+    console.error("Error fetching price data from Dex:", error);
     return res.status(500).json({
       message: (error as Error).message || "An unexpected error occurred",
     });

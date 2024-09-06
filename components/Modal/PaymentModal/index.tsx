@@ -8,6 +8,7 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import { LuLoader2 } from "react-icons/lu";
 import { Step2 } from "./Step2";
 import { classNames } from "@/utils";
+import { Step3 } from "./Step3";
 
 export interface PaymentDetail {
   address: string;
@@ -74,7 +75,11 @@ interface Props {
   setShowPaymentModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const stepComponents = [<Step1 key={0} />, <Step2 key={1} />];
+const stepComponents = [
+  <Step1 key={0} />,
+  <Step2 key={1} />,
+  <Step3 key={2} />,
+];
 
 export function PaymentModal({ setShowPaymentModal }: Props) {
   const { paymentStepData } = usePaymentStep();

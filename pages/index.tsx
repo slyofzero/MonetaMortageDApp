@@ -9,7 +9,6 @@ export default function Home() {
       </Head>
 
       <MainLayout>
-        <button className="p-4 bg-white text-black rounded-lg">Transfer</button>
         <HeroSection />
       </MainLayout>
     </>

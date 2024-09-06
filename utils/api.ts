@@ -7,9 +7,14 @@ export async function apiFetcher<T>(url: string, headers?: Headers) {
   return { response: response.status, data };
 }
 
-export async function apiPoster<T>(url: string, body: any, headers?: Headers) {
+export async function apiPoster<T>(
+  url: string,
+  body: any,
+  headers?: Headers,
+  method?: string
+) {
   const response = await fetch(url, {
-    method: "POST",
+    method: method || "POST",
     body: JSON.stringify(body),
     headers,
   });
@@ -27,11 +32,11 @@ export async function clientFetcher<T>(url: string) {
   return response;
 }
 
-export async function clientPoster<T>(url: string, body: any) {
+export async function clientPoster<T>(url: string, body: any, method?: string) {
   const token = localStorage.getItem(JWTKeyName) || "";
   const headers = new Headers();
   headers.append("authorization", token);
 
-  const response = await apiPoster<T>(url, body, headers);
+  const response = await apiPoster<T>(url, body, headers, method);
   return response;
 }

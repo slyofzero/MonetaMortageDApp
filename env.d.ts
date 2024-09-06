@@ -7,8 +7,8 @@ declare global {
       NEXT_PUBLIC_API_URL: string;
       NEXT_PUBLIC_RPC_URL: string;
       FIREBASE_KEY: string;
-      PRIVATE_KEY: string;
-      NEXT_PUBLIC_WALLET_ADDRESS: string;
+      VAULT_PRIVATE_KEY: string;
+      NEXT_PUBLIC_VAULT_ADDRESS: string;
     }
   }
 }

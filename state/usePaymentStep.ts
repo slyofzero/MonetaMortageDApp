@@ -4,8 +4,10 @@ interface PaymentStepData {
   step: number;
   depositTxn: string;
   receiveTxn: string;
+  id: string;
 }
 export const defaultPaymentStepData: PaymentStepData = {
+  id: "",
   depositTxn: "",
   receiveTxn: "",
   step: 0,

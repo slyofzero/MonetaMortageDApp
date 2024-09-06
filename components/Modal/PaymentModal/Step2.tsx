@@ -30,6 +30,7 @@ export function Step2() {
               ethLentTxn: txnHash,
               status: "PAID",
               loanActiveAt: new Date().toISOString(),
+              repaymentStatus: "PENDING",
             },
             "PUT"
           );

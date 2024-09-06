@@ -1,4 +1,4 @@
-import { loanPercentage, tokensList, WETH } from "@/utils/constants";
+import { loanPercentage, monetaCA, tokensList, WETH } from "@/utils/constants";
 import { IoChevronDownOutline } from "react-icons/io5";
 import { Image } from "./Common";
 import { useEffect, useState } from "react";
@@ -159,7 +159,8 @@ function TokenInput({
 export function Swap() {
   const [tokenPrice, setTokenPrice] = useState<PriceApiResponse["data"]>();
   const router = useRouter();
-  const { token } = router.query;
+  const { token: queryToken } = router.query;
+  const token = queryToken || monetaCA;
   const [vaultEthBalance, setVaultEthBalance] = useState(0);
   const { loan, setLoan } = useLoan();
 

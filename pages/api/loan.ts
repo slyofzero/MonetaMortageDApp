@@ -1,4 +1,4 @@
-import { addDocument, updateDocumentById } from "@/firebase";
+import { addDocument, getDocumentById, updateDocumentById } from "@/firebase";
 import { LoanFromState } from "@/state";
 import { StoredLoan } from "@/types";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -62,11 +62,34 @@ export default async function getSwapQuote(
     const { id, ...updates } = body;
     if (!id) return res.status(400).json({ message: "Mortage ID is missing" });
 
+    const loanData = await getDocumentById<StoredLoan>({
+      collectionName: "mortages",
+      id,
+    });
+
+    if (!loanData)
+      return res
+        .status(400)
+        .json({ message: `Couldn't find loan data for id ${id}` });
+
     // Handling loan active date
     if (updates.loanActiveAt) {
       const timeStamp = new Date(updates.loanActiveAt as unknown as string);
+      const loanDueAtDate = new Date(timeStamp);
+      loanDueAtDate.setDate(loanDueAtDate.getDate() + loanData.duration);
+
       const loanActiveAt = Timestamp.fromDate(timeStamp);
+      const loanDueAt = Timestamp.fromDate(loanDueAtDate);
+
       updates.loanActiveAt = loanActiveAt;
+      updates.loanDueAt = loanDueAt;
+    }
+
+    // Handling loan repaid date
+    if (updates.loanRepaidAt) {
+      const timeStamp = new Date(updates.loanRepaidAt as unknown as string);
+      const loanRepaidAt = Timestamp.fromDate(timeStamp);
+      updates.loanRepaidAt = loanRepaidAt;
     }
 
     await updateDocumentById<StoredLoan>({

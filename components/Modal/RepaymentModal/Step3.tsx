@@ -1,11 +1,11 @@
 import { Link } from "@/components/Common";
-import { useLoan, usePaymentStep } from "@/state";
+import { useLoan, useRepaymentStep } from "@/state";
 import { tokensList } from "@/utils/constants";
 
 export function Step3() {
   const { loan } = useLoan();
   const { collateralAmount, collateralToken, ethLent } = loan;
-  const { paymentStepData } = usePaymentStep();
+  const { repaymentStepData } = useRepaymentStep();
   const { symbol } = tokensList[collateralToken] || {};
 
   return (
@@ -25,21 +25,16 @@ export function Step3() {
       </p>
 
       <div className="flex gap-4 font-bold underline">
-        <Link href={`https://etherscan.io/tx/${paymentStepData.depositTxn}`}>
-          Deposit Txn
+        <Link href={`https://etherscan.io/tx/${repaymentStepData.repayTxn}`}>
+          Repayment Txn
         </Link>
 
-        <Link href={`https://etherscan.io/tx/${paymentStepData.receiveTxn}`}>
-          Receival Txn
+        <Link
+          href={`https://etherscan.io/tx/${repaymentStepData.collateralReleaseTxn}`}
+        >
+          Collateral Release Txn
         </Link>
       </div>
-
-      <Link
-        className="bg-[#00FF47] px-4 py-2 text-black rounded-lg font-semibold"
-        href={"/loans"}
-      >
-        Click here to view all loans
-      </Link>
     </div>
   );
 }

@@ -1,0 +1,126 @@
+import { FEStoredLoan } from "@/pages/api/loans";
+import { web3 } from "@/rpc";
+import { useRepaymentStep } from "@/state";
+import { useEffect, useState } from "react";
+import { useSendTransaction } from "wagmi";
+import moment from "moment";
+import { pastDuePenalty } from "@/utils/constants";
+import { roundToSixDecimals } from "@/utils/web3";
+import { clientPoster } from "@/utils/api";
+import { LoanApiResponse } from "@/pages/api/loan";
+
+interface RepaymentBreakdown {
+  daysSinceLoan: number;
+  interest: number;
+  penalty: boolean;
+  totalToRepay: number;
+}
+
+const defaultRepaymentBreakdown: RepaymentBreakdown = {
+  daysSinceLoan: 0,
+  interest: 0,
+  penalty: false,
+  totalToRepay: 0,
+};
+
+export function Step1() {
+  const { repaymentStepData, setRepaymentStepData } = useRepaymentStep();
+  const loan = repaymentStepData.loan as FEStoredLoan;
+  const { ethLent, loanActiveAt, duration } = loan;
+  const mainWalletAddress = String(
+    process.env.NEXT_PUBLIC_VAULT_ADDRESS
+  ) as `0x${string}`;
+
+  const [repaymentBreakdownData, setRepaymentBreakdownData] =
+    useState<RepaymentBreakdown>(defaultRepaymentBreakdown);
+
+  const { sendTransaction, data, isSuccess } = useSendTransaction();
+
+  // Calculate amount to repay
+  useEffect(() => {
+    const currentTime = moment();
+    const loanActiveTimestamp = moment.unix(loanActiveAt._seconds);
+    const daysSinceLoan = currentTime.diff(loanActiveTimestamp, "days");
+    const applyPenalty = daysSinceLoan > duration;
+    const interest = applyPenalty
+      ? daysSinceLoan + pastDuePenalty
+      : daysSinceLoan;
+    const totalToRepay = roundToSixDecimals(ethLent * (1 + interest / 100));
+
+    setRepaymentBreakdownData({
+      daysSinceLoan,
+      interest,
+      penalty: applyPenalty,
+      totalToRepay,
+    });
+  }, [duration, loanActiveAt, ethLent]);
+
+  const repay = () => {
+    sendTransaction({
+      to: mainWalletAddress,
+      value: BigInt(web3.utils.toWei(totalToRepay, "ether")),
+    });
+  };
+
+  // ON SUCCESS
+  useEffect(
+    () => {
+      if (data) {
+        const updateMortageDepositLink = async () => {
+          await clientPoster<LoanApiResponse>(
+            "/api/loan",
+            {
+              id: repaymentStepData.id,
+              repayEthTxn: data,
+            },
+            "PUT"
+          );
+          setRepaymentStepData((prev) => ({
+            ...prev,
+            repayTxn: data,
+            step: 1,
+          }));
+        };
+        updateMortageDepositLink();
+      }
+    },
+    // eslint-disable-next-line
+    [isSuccess, data]
+  );
+
+  const { daysSinceLoan, penalty, totalToRepay } = repaymentBreakdownData;
+
+  return (
+    <div className="flex flex-col gap-8 items-center justify-center text-sm lg:text-base whitespace-nowrap flex-wrap">
+      <div className="grid grid-cols-2 w-64 lg:w-fit gap-x-4 lg:gap-x-12">
+        <span className="font-semibold">ETH Lent</span>
+        <span className="ml-auto">{ethLent}</span>
+
+        <span className="font-semibold">Days Since Loan</span>
+        <span className="ml-auto">{daysSinceLoan}</span>
+
+        <span className="font-semibold">Past due date</span>
+        <span className="ml-auto">{penalty ? "Yes" : "No"}</span>
+
+        <span className="font-semibold">Interest</span>
+        <span className="ml-auto">
+          {daysSinceLoan} * 1% {penalty && `+ ${pastDuePenalty}%`}
+        </span>
+
+        <span className="font-semibold text-lg lg:text-2xl mt-4">
+          Total to repay
+        </span>
+        <span className="ml-auto mt-4 text-lg lg:text-2xl">
+          {totalToRepay} ETH
+        </span>
+      </div>
+
+      <button
+        className="bg-white text-black rounded-lg px-4 py-2 font-semibold"
+        onClick={repay}
+      >
+        Repay {totalToRepay} ETH
+      </button>
+    </div>
+  );
+}

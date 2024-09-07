@@ -15,10 +15,10 @@ const buttons: ButtonData[] = [
 
 export function HeroSection() {
   return (
-    <div className="flex items-center justify-center gap-8 flex-grow text-2xl font-bold">
+    <div className="grid grid-cols-2 lg:grid-cols-4 mx-auto gap-8 items-center justify-center my-auto lg:text-2xl font-bold">
       {buttons.map(({ link, text }, key) => (
         <Link
-          className="p-4 rounded-lg bg-white text-black text-center w-64"
+          className="p-4 rounded-lg bg-white text-black text-center w-fit h-full flex items-center justify-center lg:w-64"
           key={key}
           href={link}
         >

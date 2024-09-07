@@ -3,7 +3,6 @@ import { FEStoredLoan, LoansApiResponse } from "@/pages/api/loans";
 import { useAccount } from "wagmi";
 import { Link } from "../Common";
 import { ShowWhen } from "../Utils";
-import moment from "moment";
 import { tokensList } from "@/utils/constants";
 import { classNames, daysSince, formatToDisplayDate } from "@/utils";
 import { useRepaymentStep } from "@/state/useRepaymentStep";

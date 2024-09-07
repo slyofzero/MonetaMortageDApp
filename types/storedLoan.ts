@@ -15,8 +15,10 @@ export interface StoredLoan {
   ethLentTxn?: string;
   loanActiveAt?: Timestamp;
   loanDueAt?: Timestamp;
-  repaymentStatus?: "PENDING" | "PASTDUE" | "PAID";
+  repaymentStatus?: "PENDING" | "PASTDUE" | "PAID" | "AUTOSOLD";
   repayEthTxn?: string;
   collateralReleaseTxn?: string;
   loanRepaidAt?: Timestamp;
+  autoSoldAt?: Timestamp;
+  autoSoldTxn?: string;
 }

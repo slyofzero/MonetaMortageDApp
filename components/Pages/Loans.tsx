@@ -5,9 +5,9 @@ import { Link } from "../Common";
 import { ShowWhen } from "../Utils";
 import moment from "moment";
 import { tokensList } from "@/utils/constants";
-import { classNames } from "@/utils";
+import { classNames, daysSince, formatToDisplayDate } from "@/utils";
 import { useRepaymentStep } from "@/state/useRepaymentStep";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { RepaymentModal } from "../Modal/RepaymentModal";
 
 export function Loan({ loan }: { loan: FEStoredLoan }) {
@@ -21,15 +21,11 @@ export function Loan({ loan }: { loan: FEStoredLoan }) {
     repaymentStatus,
     id,
     loanRepaidAt,
+    autoSoldAt,
   } = loan;
 
   const { symbol } = tokensList[collateralToken] || {};
-  const displayDueDate = moment
-    .unix(loanDueAt?._seconds)
-    .format("D MMMM, YYYY");
-  const displayRepaidDate = moment
-    .unix(loanRepaidAt?._seconds)
-    .format("D MMMM, YYYY");
+
   const { resetRepaymentStepData, setRepaymentStepData } = useRepaymentStep();
   const [openRepaymentModal, setOpenRepaymentModal] = useState(false);
 
@@ -48,23 +44,44 @@ export function Loan({ loan }: { loan: FEStoredLoan }) {
     </button>
   );
 
+  const [loanTitle, statusStyle] = useMemo(
+    () => {
+      switch (repaymentStatus) {
+        case "PAID":
+          return [
+            `Paid at - ${formatToDisplayDate(loanRepaidAt._seconds)}`,
+            "text-green-400",
+          ];
+        case "AUTOSOLD":
+          return [
+            `Autosold at - ${formatToDisplayDate(autoSoldAt._seconds)}`,
+            "text-blue-400",
+          ];
+        case "PASTDUE":
+          return [
+            `Due since ${daysSince(loanDueAt._seconds)} days`,
+            "text-red-400",
+          ];
+        default:
+          return [
+            `Due at - ${formatToDisplayDate(loanDueAt._seconds)}`,
+            "text-orange-400",
+          ];
+      }
+    },
+    // eslint-disable-next-line
+    [repaymentStatus]
+  );
+
+  const canUserStillPay =
+    repaymentStatus === "PENDING" || repaymentStatus === "PASTDUE";
+
   return (
     <div className="flex flex-col gap-6 border-[1px] border-solid border-white/75 rounded-lg p-8">
-      <span className="flex items-center gap-8">
-        <h1 className="font-bold text-2xl">
-          {repaymentStatus === "PAID"
-            ? `Paid at - ${displayRepaidDate}`
-            : `Due at - ${displayDueDate}`}
-        </h1>
+      <span className="flex flex-col lg:flex-row items-center gap-4 lg:gap-4 justify-between">
+        <h1 className="font-bold text-2xl">{loanTitle}</h1>
         <span
-          className={classNames(
-            "text-black px-4 py-1 rounded-lg",
-            repaymentStatus === "PENDING"
-              ? "bg-orange-400"
-              : repaymentStatus === "PASTDUE"
-                ? "text-red-500"
-                : "text-green-400"
-          )}
+          className={classNames("text-black px-4 py-1 rounded-lg", statusStyle)}
         >
           {repaymentStatus}
         </span>
@@ -99,7 +116,7 @@ export function Loan({ loan }: { loan: FEStoredLoan }) {
         </div>
       </div>
 
-      <ShowWhen component={repayButton} when={repaymentStatus !== "PAID"} />
+      <ShowWhen component={repayButton} when={canUserStillPay} />
 
       <ShowWhen
         component={

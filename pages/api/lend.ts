@@ -42,9 +42,9 @@ export default async function lendUserEth(
 
       const wallet = new ethers.Wallet(VAULT_PRIVATE_KEY, provider);
       const gasPrice = await web3.eth.getGasPrice();
-      const gasLimit = 21000;
-      const amount = Number(web3.utils.toWei(ethLent, "ether"));
-      const valueAfterGas = amount - gasLimit * Number(gasPrice);
+      const amount = ethers.parseEther(String(ethLent));
+      const gasLimit = 21000n;
+      const valueAfterGas = amount - gasPrice * gasLimit;
 
       const tx = await wallet.sendTransaction({
         to: address,

@@ -38,9 +38,11 @@ export function TokenSelector() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-1 flex-wrap justify-center">
-        {Object.keys(collateralTokensList).map((token, key) => (
-          <TokenButton token={token} key={key} />
-        ))}
+        {Object.keys(collateralTokensList)
+          .slice(0, 6)
+          .map((token, key) => (
+            <TokenButton token={token} key={key} />
+          ))}
       </div>
 
       <div className="flex justify-center items-center">

@@ -240,34 +240,6 @@ export const collateralTokensList: { [key: string]: TokenInfo } = {
     logoURI:
       "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
   },
-  "0x5b342F03D126314d925Fa57A45654f92905e6450": {
-    name: "Doggie",
-    symbol: "DOG",
-    decimals: 18,
-    logoURI:
-      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
-  },
-  "0x5b342F03D126314d925Fa57A45654f92905e6412": {
-    name: "Moneta",
-    symbol: "MNTA",
-    decimals: 18,
-    logoURI:
-      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
-  },
-  "0x5b342F03D126314d925Fa57A45654f92905e6111": {
-    name: "Moneta",
-    symbol: "MNTA",
-    decimals: 18,
-    logoURI:
-      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
-  },
-  "0x5b342F03D126314d925Fa57A45654f92905e6411": {
-    name: "Moneta",
-    symbol: "MNTA",
-    decimals: 18,
-    logoURI:
-      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
-  },
 };
 
 export const tokensList: { [key: string]: TokenInfo } = {

@@ -5,6 +5,7 @@ export const JWTKeyName = "moneta-mortage";
 export const monetaCA = "0x5b342F03D126314d925Fa57A45654f92905e6451";
 export const goldEligibleThreshold = 0.2;
 export const vaultMinimumBalance = 0.1;
+export const platformCharge = 0.05;
 
 export const erc20Abi = [
   {

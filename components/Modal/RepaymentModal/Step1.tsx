@@ -4,16 +4,18 @@ import { useRepaymentStep } from "@/state";
 import { useEffect, useState } from "react";
 import { useSendTransaction } from "wagmi";
 import moment from "moment";
-import { pastDuePenalty } from "@/utils/constants";
+import { pastDuePenalty, platformCharge } from "@/utils/constants";
 import { roundToSixDecimals } from "@/utils/web3";
 import { clientPoster } from "@/utils/api";
 import { LoanApiResponse } from "@/pages/api/loan";
+import { ShowWhen } from "@/components/Utils";
 
 interface RepaymentBreakdown {
   daysSinceLoan: number;
   interest: number;
   penalty: boolean;
   totalToRepay: number;
+  repaymentUnder24h: boolean;
 }
 
 const defaultRepaymentBreakdown: RepaymentBreakdown = {
@@ -21,6 +23,7 @@ const defaultRepaymentBreakdown: RepaymentBreakdown = {
   interest: 0,
   penalty: false,
   totalToRepay: 0,
+  repaymentUnder24h: false,
 };
 
 export function Step1() {
@@ -45,13 +48,21 @@ export function Step1() {
     const interest = applyPenalty
       ? daysSinceLoan + pastDuePenalty
       : daysSinceLoan;
-    const totalToRepay = roundToSixDecimals(ethLent * (1 + interest / 100));
+
+    // Platform charge
+    const repaymentUnder24h = daysSinceLoan === 0;
+    const loanPlatformCharge = repaymentUnder24h ? platformCharge : 0;
+
+    const totalToRepay = roundToSixDecimals(
+      ethLent * (1 + interest / 100) + loanPlatformCharge
+    );
 
     setRepaymentBreakdownData({
       daysSinceLoan,
       interest,
       penalty: applyPenalty,
       totalToRepay,
+      repaymentUnder24h: daysSinceLoan === 0,
     });
   }, [duration, loanActiveAt, ethLent]);
 
@@ -88,7 +99,8 @@ export function Step1() {
     [isSuccess, data]
   );
 
-  const { daysSinceLoan, penalty, totalToRepay } = repaymentBreakdownData;
+  const { daysSinceLoan, penalty, totalToRepay, repaymentUnder24h } =
+    repaymentBreakdownData;
 
   return (
     <div className="flex flex-col gap-8 items-center justify-center text-sm lg:text-base whitespace-nowrap flex-wrap">
@@ -106,6 +118,16 @@ export function Step1() {
         <span className="ml-auto">
           {daysSinceLoan} * 1% {penalty && `+ ${pastDuePenalty}%`}
         </span>
+
+        <ShowWhen
+          when={repaymentUnder24h}
+          component={
+            <>
+              <span className="font-semibold">Platform Charge</span>
+              <span className="ml-auto">{platformCharge} ETH</span>
+            </>
+          }
+        />
 
         <span className="font-semibold text-lg lg:text-2xl mt-4">
           Total to repay

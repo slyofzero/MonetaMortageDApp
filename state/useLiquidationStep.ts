@@ -15,7 +15,7 @@ export const defaultLiquidationStepData: LiquidationStepData = {
   refundTxn: "",
   step: 0,
   loan: null,
-  ethReceived: 0,
+  ethReceived: 1,
 };
 const liquidationStepDataAtom = atom<LiquidationStepData>(
   defaultLiquidationStepData

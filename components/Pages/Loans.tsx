@@ -28,6 +28,7 @@ export function Loan({ loan }: { loan: FEStoredLoan }) {
     id,
     loanRepaidAt,
     autoSoldAt,
+    liquidatedAt,
   } = loan;
 
   const { symbol } = tokensList[collateralToken] || {};
@@ -69,22 +70,27 @@ export function Loan({ loan }: { loan: FEStoredLoan }) {
       switch (repaymentStatus) {
         case "PAID":
           return [
-            `Paid at - ${formatToDisplayDate(loanRepaidAt._seconds)}`,
+            `Paid at - ${formatToDisplayDate(loanRepaidAt?._seconds)}`,
             "text-green-400",
           ];
         case "AUTOSOLD":
           return [
-            `Autosold at - ${formatToDisplayDate(autoSoldAt._seconds)}`,
+            `Autosold at - ${formatToDisplayDate(autoSoldAt?._seconds)}`,
             "text-blue-400",
           ];
         case "PASTDUE":
           return [
-            `Due since ${daysSince(loanDueAt._seconds)} days`,
+            `Due since ${daysSince(loanDueAt?._seconds)} days`,
+            "text-red-400",
+          ];
+        case "LIQUIDATED":
+          return [
+            `Liquidated at ${formatToDisplayDate(liquidatedAt?._seconds)}`,
             "text-red-400",
           ];
         default:
           return [
-            `Due at - ${formatToDisplayDate(loanDueAt._seconds)}`,
+            `Due at - ${formatToDisplayDate(loanDueAt?._seconds)}`,
             "text-orange-400",
           ];
       }

@@ -1,4 +1,5 @@
 import { Link } from "@/components/Common";
+import { ShowWhen } from "@/components/Utils";
 import { useLiquidationStep, useLoan } from "@/state";
 import { tokensList } from "@/utils/constants";
 
@@ -27,12 +28,17 @@ export function Step3() {
           Selling Txn
         </Link>
 
-        <Link
-          href={`https://etherscan.io/tx/${liquidationStepData.refundTxn}`}
-          target="_blank"
-        >
-          Refund Txn
-        </Link>
+        <ShowWhen
+          component={
+            <Link
+              href={`https://etherscan.io/tx/${liquidationStepData.refundTxn}`}
+              target="_blank"
+            >
+              Refund Txn
+            </Link>
+          }
+          when={liquidationStepData.refundTxn}
+        />
       </div>
     </div>
   );

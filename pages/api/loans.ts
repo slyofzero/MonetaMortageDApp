@@ -5,12 +5,17 @@ import type { NextApiRequest, NextApiResponse } from "next";
 export interface FEStoredLoan
   extends Omit<
     StoredLoan,
-    "loanDueAt" | "loanActiveAt" | "loanRepaidAt" | "autoSoldAt"
+    | "loanDueAt"
+    | "loanActiveAt"
+    | "loanRepaidAt"
+    | "autoSoldAt"
+    | "liquidatedAt"
   > {
   loanDueAt: { _seconds: number; _nanoseconds: number };
   loanActiveAt: { _seconds: number; _nanoseconds: number };
   loanRepaidAt: { _seconds: number; _nanoseconds: number };
   autoSoldAt: { _seconds: number; _nanoseconds: number };
+  liquidatedAt: { _seconds: number; _nanoseconds: number };
 }
 
 export interface LoansApiResponse {

@@ -1,5 +1,5 @@
 import { loanPercentage, monetaCA, tokensList, WETH } from "@/utils/constants";
-import { Image } from "./Common";
+import { Image, Link } from "./Common";
 import { useEffect, useState } from "react";
 import { apiFetcher } from "@/utils/api";
 import { PriceApiResponse } from "@/pages/api/price";
@@ -7,6 +7,7 @@ import {
   getEthBalance,
   getTokenBalance,
   roundToSixDecimals,
+  shortenEthAddress,
 } from "@/utils/web3";
 import { useAccount } from "wagmi";
 import { ShowWhen } from "./Utils";
@@ -161,6 +162,7 @@ export function Swap() {
   const token = queryToken || monetaCA;
   const [vaultEthBalance, setVaultEthBalance] = useState(0);
   const { loan, setLoan } = useLoan();
+  const { address } = useAccount();
 
   // Get vault balance
   useEffect(() => {
@@ -223,23 +225,82 @@ export function Swap() {
     setLoan((prev) => ({ ...prev, collateralAmount: roundToSixDecimals(inputAmount) })); //prettier-ignore
   };
 
+  const ethInterest = roundToSixDecimals(
+    (loan.duration / 100) * Number(loan.ethLent || 0)
+  );
+  const usdInterest = roundToSixDecimals(
+    (loan.duration / 100) * Number(loan.ethLentUsd || 0)
+  );
+
   return (
-    <div className="p-2 border-[1px] border-white/30 rounded-xl flex flex-col gap-1 w-[350px]">
-      <h3>Vault holds {vaultEthBalance} ETH</h3>
-      <TokenInput
-        id="mortageAmount"
-        label="Mortage"
-        tokenAddress={loan.collateralToken}
-        onChange={onInputAmountChange}
-        value={loan.collateralAmount}
-      />
-      <TokenInput
-        id="loanAmount"
-        label="Loaned"
-        tokenAddress={WETH}
-        onChange={onOutputAmountChange}
-        value={loan.ethLent}
-      />
+    <div className="flex flex-col lg:flex-row gap-4">
+      <div className="p-2 border-[1px] border-white/30 rounded-xl flex flex-col gap-1 w-[350px]">
+        <h3>Vault holds {vaultEthBalance} ETH</h3>
+        <TokenInput
+          id="mortageAmount"
+          label="Mortage"
+          tokenAddress={loan.collateralToken}
+          onChange={onInputAmountChange}
+          value={loan.collateralAmount}
+        />
+        <TokenInput
+          id="loanAmount"
+          label="Loaned"
+          tokenAddress={WETH}
+          onChange={onOutputAmountChange}
+          value={loan.ethLent}
+        />
+      </div>
+
+      <div className="p-2 px-4 border-[1px] border-white/30 rounded-xl grid grid-cols-2 gap-1 w-[350px]">
+        <span className="font-semibold">Your Wallet</span>{" "}
+        <Link
+          href={`https://etherscan.io/address/${address}`}
+          className="ml-auto underline"
+          target="_blank"
+        >
+          {shortenEthAddress(address || "")}
+        </Link>
+        {/*  */}
+        <span className="font-semibold">Collateral Token</span>{" "}
+        <Link
+          href={`https://etherscan.io/token/${loan.collateralToken}`}
+          className="ml-auto underline"
+          target="_blank"
+        >
+          {shortenEthAddress(loan.collateralToken || "")}
+        </Link>
+        {/*  */}
+        <span className="font-semibold whitespace-nowrap">
+          Collateral Token Price
+        </span>{" "}
+        <span className="ml-auto">${tokenPrice?.priceUsd || 0}</span>
+        {/*  */}
+        <span className="font-semibold whitespace-nowrap">
+          Collateral Amount
+        </span>{" "}
+        <span className="ml-auto">{loan.collateralAmount || 0}</span>
+        {/*  */}
+        <span className="font-semibold whitespace-nowrap">
+          Collateral Tokens Value
+        </span>{" "}
+        <span className="ml-auto">${loan.collateralUsdValueAtLoan || 0}</span>
+        {/*  */}
+        <span className="font-semibold whitespace-nowrap">
+          Loan Value in ETH
+        </span>{" "}
+        <span className="ml-auto">{loan.ethLent || 0} ETH</span>
+        {/*  */}
+        <span className="font-semibold whitespace-nowrap">
+          Interest ETH
+        </span>{" "}
+        <span className="ml-auto">{ethInterest} ETH</span>
+        {/*  */}
+        <span className="font-semibold whitespace-nowrap">
+          Interest USD
+        </span>{" "}
+        <span className="ml-auto">${usdInterest}</span>
+      </div>
     </div>
   );
 }

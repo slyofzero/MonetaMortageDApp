@@ -2,6 +2,10 @@ import { web3 } from "@/rpc";
 import { erc20Abi } from "./constants";
 import { ethers } from "ethers";
 
+export function shortenEthAddress(address: string, show: number = 3) {
+  return `${address.slice(0, show)}...${address.slice(address.length - show, address.length)}`;
+}
+
 export async function getTokenBalance(
   address: string,
   token: string

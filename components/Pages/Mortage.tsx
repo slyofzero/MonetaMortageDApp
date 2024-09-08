@@ -11,6 +11,7 @@ import { clientPoster } from "@/utils/api";
 import { PaymentModal } from "../Modal/PaymentModal";
 import { LoanApiResponse } from "@/pages/api/loan";
 import { TokenSelector } from "../TokenSelector";
+import { DisclaimerModal } from "../Modal/DisclaimerModal";
 
 export function Mortage() {
   const { isConnected, address } = useAccount();
@@ -19,6 +20,7 @@ export function Mortage() {
   const [userCollateralTokenBalance, setUserCollateralTokenBalance] =
     useState(0);
   const [openPaymentModel, setOpenPaymentModal] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
   const { resetPaymentStepData, setPaymentStepData } = usePaymentStep();
   const [submitBtnText, setSubmitBtnText] = useState<string>("Complete Loan");
 
@@ -53,15 +55,19 @@ export function Mortage() {
     if (!loan.collateralAmount) return;
     if (insufficientBalance) return;
 
+    setShowDisclaimer(true);
+  };
+
+  const onDepositClick = async () => {
     const response = await clientPoster<LoanApiResponse>("/api/loan", {
       ...loan,
       user: address,
     });
-
     const responseIsOk = response.response === 200;
     const loanId = response.data.id;
 
     if (responseIsOk && loanId) {
+      setShowDisclaimer(false);
       setOpenPaymentModal(response.response === 200);
       resetPaymentStepData();
       setPaymentStepData((prev) => ({ ...prev, id: loanId }));
@@ -83,7 +89,7 @@ export function Mortage() {
   );
 
   return (
-    <div className="flex-grow flex flex-col gap-8 items-center justify-center">
+    <div className="flex-grow flex flex-col pt-16 pb-32 lg:py-0 gap-8 items-center justify-center">
       <TokenSelector />
       <Swap />
       <DurationSlider />
@@ -91,6 +97,17 @@ export function Mortage() {
         component={<PaymentModal setShowPaymentModal={setOpenPaymentModal} />}
         when={openPaymentModel}
       />
+
+      <ShowWhen
+        component={
+          <DisclaimerModal
+            setShowDisclaimer={setShowDisclaimer}
+            onDepositClick={onDepositClick}
+          />
+        }
+        when={showDisclaimer}
+      />
+
       <ShowWhen
         component={submitButton}
         when={isConnected}

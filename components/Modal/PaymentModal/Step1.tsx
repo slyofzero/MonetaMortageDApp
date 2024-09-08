@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { erc20Abi } from "viem";
 import { mainnet } from "viem/chains";
 import { useWriteContract } from "wagmi";
+import { ethers } from "ethers";
 
 export function Step1() {
   const { loan } = useLoan();
@@ -18,7 +19,10 @@ export function Step1() {
   const { writeContract, isSuccess, data } = useWriteContract();
   const { setPaymentStepData, paymentStepData } = usePaymentStep();
 
-  const toSendAmount = BigInt(collateralAmount || 0) * 10n ** BigInt(decimals);
+  const toSendAmount = ethers.parseUnits(
+    String(collateralAmount || 0),
+    decimals
+  );
 
   // WRITE CONTRACT
   useEffect(

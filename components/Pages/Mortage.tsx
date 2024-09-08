@@ -12,6 +12,12 @@ import { PaymentModal } from "../Modal/PaymentModal";
 import { LoanApiResponse } from "@/pages/api/loan";
 import { TokenSelector } from "../TokenSelector";
 import { DisclaimerModal } from "../Modal/DisclaimerModal";
+import { collateralTokensList } from "@/utils/constants";
+
+const disclaimerText: string[] = [
+  "1. Your collateral assets value drops to +5% of Your Loan Value + Total interest + Penalty (if any) accumulated till that day.",
+  "2. You fail to repay it back in 30 Days, in that case, the tokens will be liqudiated and the amount left after (Loan amount + interest + penalty) will be credited to your wallet.",
+];
 
 export function Mortage() {
   const { isConnected, address } = useAccount();
@@ -88,6 +94,8 @@ export function Mortage() {
     </button>
   );
 
+  const { symbol } = collateralTokensList[loan.collateralToken] || {};
+
   return (
     <div className="flex-grow flex flex-col pt-16 pb-32 lg:py-0 gap-8 items-center justify-center">
       <TokenSelector />
@@ -101,8 +109,10 @@ export function Mortage() {
       <ShowWhen
         component={
           <DisclaimerModal
+            text={disclaimerText}
             setShowDisclaimer={setShowDisclaimer}
-            onDepositClick={onDepositClick}
+            onAccept={onDepositClick}
+            btnText={`Deposit ${loan.collateralAmount} ${symbol}`}
           />
         }
         when={showDisclaimer}

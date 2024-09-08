@@ -38,3 +38,17 @@ export async function getEthBalance(address: string): Promise<number> {
 export function roundToSixDecimals(num: string | number | BigInt) {
   return Number(parseFloat(Number(num).toFixed(6)));
 }
+
+export async function getEthRecieved(hash: string) {
+  const swapEvent =
+    "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822";
+  const txn = await web3.eth.getTransactionReceipt(hash);
+  const swapEventLog = txn.logs.find(({ topics }) =>
+    topics?.includes(swapEvent)
+  );
+  const amount1OutHex = swapEventLog?.data?.slice(192, 300) || "0";
+  const ethRecieved = roundToSixDecimals(
+    web3.utils.fromWei(`0x${amount1OutHex}`, "ether")
+  );
+  return ethRecieved;
+}

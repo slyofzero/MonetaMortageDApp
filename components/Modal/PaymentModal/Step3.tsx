@@ -25,11 +25,17 @@ export function Step3() {
       </p>
 
       <div className="flex gap-4 font-bold underline">
-        <Link href={`https://etherscan.io/tx/${paymentStepData.depositTxn}`}>
+        <Link
+          href={`https://etherscan.io/tx/${paymentStepData.depositTxn}`}
+          target="_blank"
+        >
           Deposit Txn
         </Link>
 
-        <Link href={`https://etherscan.io/tx/${paymentStepData.receiveTxn}`}>
+        <Link
+          href={`https://etherscan.io/tx/${paymentStepData.receiveTxn}`}
+          target="_blank"
+        >
           Receival Txn
         </Link>
       </div>

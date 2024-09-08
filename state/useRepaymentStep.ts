@@ -12,7 +12,7 @@ export const defaultRePaymentStepData: RePaymentStepData = {
   id: "",
   repayTxn: "",
   collateralReleaseTxn: "",
-  step: 1,
+  step: 0,
   loan: null,
 };
 const repaymentStepDataAtom = atom<RePaymentStepData>(defaultRePaymentStepData);

@@ -9,6 +9,7 @@ declare global {
       FIREBASE_KEY: string;
       VAULT_PRIVATE_KEY: string;
       NEXT_PUBLIC_VAULT_ADDRESS: string;
+      SCRIPT_URL: string;
     }
   }
 }

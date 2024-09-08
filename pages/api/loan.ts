@@ -14,7 +14,7 @@ export interface LoanApiResponse {
   id?: string;
 }
 
-export default async function getSwapQuote(
+export default async function userLoan(
   req: NextApiRequest,
   res: NextApiResponse<LoanApiResponse>
 ) {
@@ -90,6 +90,13 @@ export default async function getSwapQuote(
       const timeStamp = new Date(updates.loanRepaidAt as unknown as string);
       const loanRepaidAt = Timestamp.fromDate(timeStamp);
       updates.loanRepaidAt = loanRepaidAt;
+    }
+
+    // Handling loan liquidated date
+    if (updates.liquidatedAt) {
+      const timeStamp = new Date(updates.liquidatedAt as unknown as string);
+      const liquidatedAt = Timestamp.fromDate(timeStamp);
+      updates.liquidatedAt = liquidatedAt;
     }
 
     await updateDocumentById<StoredLoan>({

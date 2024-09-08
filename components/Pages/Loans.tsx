@@ -8,6 +8,13 @@ import { classNames, daysSince, formatToDisplayDate } from "@/utils";
 import { useRepaymentStep } from "@/state/useRepaymentStep";
 import { useMemo, useState } from "react";
 import { RepaymentModal } from "../Modal/RepaymentModal";
+import { DisclaimerModal } from "../Modal/DisclaimerModal";
+import { useLiquidationStep } from "@/state/useLiquidationStep";
+import { LiquidateModal } from "../Modal/LiquidateModal";
+
+const disclaimerText: string[] = [
+  "The tokens will be liqudiated and the amount left after (Loan amount + interest + penalty) will be credited to your wallet.",
+];
 
 export function Loan({ loan }: { loan: FEStoredLoan }) {
   const {
@@ -26,7 +33,12 @@ export function Loan({ loan }: { loan: FEStoredLoan }) {
   const { symbol } = tokensList[collateralToken] || {};
 
   const { resetRepaymentStepData, setRepaymentStepData } = useRepaymentStep();
+  const { resetLiquidationStepData, setLiquidationStepData } =
+    useLiquidationStep();
+
   const [openRepaymentModal, setOpenRepaymentModal] = useState(false);
+  const [openLiquidationModal, setOpenLiquidationModal] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
 
   const repay = () => {
     resetRepaymentStepData();
@@ -40,6 +52,15 @@ export function Loan({ loan }: { loan: FEStoredLoan }) {
       className="bg-white text-black font-semibold px-4 py-2 rounded-lg"
     >
       Repay
+    </button>
+  );
+
+  const liquidateButton = (
+    <button
+      onClick={() => setShowDisclaimer(true)}
+      className="bg-zinc-800 text-white font-semibold px-4 py-2 rounded-lg"
+    >
+      Liquidate
     </button>
   );
 
@@ -75,8 +96,15 @@ export function Loan({ loan }: { loan: FEStoredLoan }) {
   const canUserStillPay =
     repaymentStatus === "PENDING" || repaymentStatus === "PASTDUE";
 
+  const liquidate = async () => {
+    setShowDisclaimer(false);
+    resetLiquidationStepData();
+    setLiquidationStepData((prev) => ({ ...prev, id: id || "", loan }));
+    setOpenLiquidationModal(true);
+  };
+
   return (
-    <div className="flex flex-col gap-6 border-[1px] border-solid border-white/75 rounded-lg p-8">
+    <div className="flex flex-col justify-center gap-6 border-[1px] border-solid border-white/75 rounded-lg p-8">
       <span className="flex flex-col lg:flex-row items-center gap-4 lg:gap-4 justify-between">
         <h1 className="font-bold text-2xl">{loanTitle}</h1>
         <span
@@ -115,13 +143,35 @@ export function Loan({ loan }: { loan: FEStoredLoan }) {
         </div>
       </div>
 
-      <ShowWhen component={repayButton} when={canUserStillPay} />
+      <div className="flex flex-col gap-2">
+        <ShowWhen component={repayButton} when={canUserStillPay} />
+        <ShowWhen component={liquidateButton} when={canUserStillPay} />
+      </div>
+
+      <ShowWhen
+        component={
+          <DisclaimerModal
+            text={disclaimerText}
+            setShowDisclaimer={setShowDisclaimer}
+            onAccept={liquidate}
+            btnText={`Liquidate ${collateralAmount} ${symbol}`}
+          />
+        }
+        when={showDisclaimer}
+      />
 
       <ShowWhen
         component={
           <RepaymentModal setShowRepaymentModal={setOpenRepaymentModal} />
         }
         when={openRepaymentModal}
+      />
+
+      <ShowWhen
+        component={
+          <LiquidateModal setShowLiquidationModal={setOpenLiquidationModal} />
+        }
+        when={openLiquidationModal}
       />
     </div>
   );
@@ -147,13 +197,22 @@ export function Loans() {
   );
 
   const loans = (
-    <div className="flex flex-col gap-8">
+    <div
+      className={classNames(
+        "grid grid-cols-1 justify-center items-stretch gap-x-4 gap-y-8",
+        userLoans?.length === 1
+          ? "lg:grid-cols-1"
+          : userLoans?.length === 2
+            ? "lg:grid-cols-2"
+            : "lg:grid-cols-3"
+      )}
+    >
       {userLoans?.map((loan, key) => <Loan loan={loan} key={key} />)}
     </div>
   );
 
   return (
-    <div className="flex items-center justify-center flex-grow">
+    <div className="flex items-center justify-center flex-grow pt-16 pb-32 lg:py-8">
       <ShowWhen
         component={loans}
         when={userLoans?.length}

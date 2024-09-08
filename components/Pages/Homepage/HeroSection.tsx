@@ -1,12 +1,19 @@
 import { Link } from "@/components/Common";
+import { Socials } from "@/components/Socials";
+import { HTMLAttributeAnchorTarget } from "react";
 
 export interface ButtonData {
   text: string;
   link: string;
+  target?: HTMLAttributeAnchorTarget;
 }
 
 const buttons: ButtonData[] = [
-  { link: "#", text: "Docs" },
+  {
+    link: "https://monetafi.gitbook.io/moneta-wp",
+    text: "Docs",
+    target: "_blank",
+  },
   { link: "/mortage", text: "Apply" },
   { link: "#", text: "List of tokens" },
 ];
@@ -19,11 +26,12 @@ export function HeroSection() {
         <h3>Mortage prelisted tokens</h3>
 
         <div className="mt-8 flex lg:flex-row justify-between gap-4 flex-wrap">
-          {buttons.map(({ link, text }, key) => (
+          {buttons.map(({ link, text, target }, key) => (
             <Link
               key={key}
               className="bg-black text-white p-2 rounded-lg w-32 mx-auto"
               href={link}
+              target={target || "_self"}
             >
               {text}
             </Link>
@@ -36,6 +44,8 @@ export function HeroSection() {
         <div className="bg-white text-black px-4 py-2 w-44">Coming Soon...</div>
         <div className="bg-white text-black px-4 py-2 w-44">Coming Soon...</div>
       </div>
+
+      <Socials />
     </div>
   );
 }

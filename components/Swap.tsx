@@ -1,4 +1,10 @@
-import { loanPercentage, monetaCA, tokensList, WETH } from "@/utils/constants";
+import {
+  loanPercentage,
+  monetaCA,
+  tokensList,
+  vaultMinimumBalance,
+  WETH,
+} from "@/utils/constants";
 import { Image, Link } from "./Common";
 import { useEffect, useState } from "react";
 import { apiFetcher } from "@/utils/api";
@@ -164,6 +170,10 @@ export function Swap() {
   const { loan, setLoan } = useLoan();
   const { address } = useAccount();
 
+  const vaulEthAvailable = roundToSixDecimals(
+    vaultEthBalance - vaultMinimumBalance
+  );
+
   // Get vault balance
   useEffect(() => {
     const getPrice = async () => {
@@ -203,9 +213,9 @@ export function Swap() {
     let outputAmount = value * (tokenPrice?.priceNative || 0) * loanPercentage;
     let inputAmount = value;
 
-    if (outputAmount > vaultEthBalance) {
-      outputAmount = vaultEthBalance;
-      inputAmount = roundToSixDecimals(vaultEthBalance / (tokenPrice?.priceNative || 0) / loanPercentage); //prettier-ignore
+    if (outputAmount > vaulEthAvailable) {
+      outputAmount = vaulEthAvailable;
+      inputAmount = roundToSixDecimals(vaulEthAvailable / (tokenPrice?.priceNative || 0) / loanPercentage); //prettier-ignore
     }
 
     setLoan((prev) => ({ ...prev, collateralAmount: inputAmount }));
@@ -216,9 +226,9 @@ export function Swap() {
     let inputAmount = value / (tokenPrice?.priceNative || 0) / loanPercentage;
     let outputAmount = value;
 
-    if (outputAmount > vaultEthBalance) {
-      outputAmount = vaultEthBalance;
-      inputAmount = roundToSixDecimals(vaultEthBalance / (tokenPrice?.priceNative || 0) / loanPercentage); //prettier-ignore
+    if (outputAmount > vaulEthAvailable) {
+      outputAmount = vaulEthAvailable;
+      inputAmount = roundToSixDecimals(vaulEthAvailable / (tokenPrice?.priceNative || 0) / loanPercentage); //prettier-ignore
     }
 
     setLoan((prev) => ({ ...prev, ethLent: outputAmount }));

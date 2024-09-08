@@ -3,19 +3,17 @@ import { LoanApiResponse } from "@/pages/api/loan";
 import { useLoan, usePaymentStep } from "@/state";
 import { clientPoster } from "@/utils/api";
 import { useEffect } from "react";
-import { useAccount } from "wagmi";
 
 export function Step2() {
-  const { address } = useAccount();
   const { loan } = useLoan();
   const { ethLent } = loan;
   const { setPaymentStepData, paymentStepData } = usePaymentStep();
+  const { id } = paymentStepData;
 
   useEffect(
     () => {
       const body: LendApiRequestBody = {
-        ethLent: Number(0.001),
-        address: String(address),
+        id,
       };
 
       (async () => {

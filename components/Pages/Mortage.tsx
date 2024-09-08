@@ -10,6 +10,7 @@ import { getTokenBalance } from "@/utils/web3";
 import { clientPoster } from "@/utils/api";
 import { PaymentModal } from "../Modal/PaymentModal";
 import { LoanApiResponse } from "@/pages/api/loan";
+import { TokenSelector } from "../TokenSelector";
 
 export function Mortage() {
   const { isConnected, address } = useAccount();
@@ -19,6 +20,7 @@ export function Mortage() {
     useState(0);
   const [openPaymentModel, setOpenPaymentModal] = useState(false);
   const { resetPaymentStepData, setPaymentStepData } = usePaymentStep();
+  const [submitBtnText, setSubmitBtnText] = useState<string>("Complete Loan");
 
   // Get balance
   useEffect(() => {
@@ -37,12 +39,18 @@ export function Mortage() {
   }, [address, isConnected, loan.collateralToken]);
 
   useEffect(() => {
-    setInsufficientBalance(
-      Number(loan.collateralAmount) > userCollateralTokenBalance
-    );
+    const isInsufficientBalance =
+      Number(loan.collateralAmount) > userCollateralTokenBalance;
+    setInsufficientBalance(isInsufficientBalance);
+
+    if (isInsufficientBalance) setSubmitBtnText("Insufficient Balance");
+    else if (!loan.collateralAmount)
+      setSubmitBtnText("Enter collateral amount");
+    else setSubmitBtnText("Complete Loan  ");
   }, [userCollateralTokenBalance, loan.collateralAmount]);
 
   const completeLoan = async () => {
+    if (!loan.collateralAmount) return;
     if (insufficientBalance) return;
 
     const response = await clientPoster<LoanApiResponse>("/api/loan", {
@@ -65,25 +73,24 @@ export function Mortage() {
       onClick={completeLoan}
       className={classNames(
         "font-semibold px-4 py-2 rounded-lg w-64",
-        !insufficientBalance
-          ? "bg-white text-black"
-          : "text-white bg-black border-[1px] border-solid"
+        insufficientBalance || !loan.collateralAmount
+          ? "text-white bg-black border-[1px] border-solid"
+          : "bg-white text-black"
       )}
     >
-      {!insufficientBalance ? "Complete loan" : "Insufficient Balance"}
+      {submitBtnText}
     </button>
   );
 
   return (
     <div className="flex-grow flex flex-col gap-8 items-center justify-center">
+      <TokenSelector />
       <Swap />
       <DurationSlider />
-
       <ShowWhen
         component={<PaymentModal setShowPaymentModal={setOpenPaymentModal} />}
         when={openPaymentModel}
       />
-
       <ShowWhen
         component={submitButton}
         when={isConnected}

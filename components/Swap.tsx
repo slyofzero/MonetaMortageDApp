@@ -1,5 +1,4 @@
 import { loanPercentage, monetaCA, tokensList, WETH } from "@/utils/constants";
-import { IoChevronDownOutline } from "react-icons/io5";
 import { Image } from "./Common";
 import { useEffect, useState } from "react";
 import { apiFetcher } from "@/utils/api";
@@ -122,7 +121,6 @@ function TokenInput({
             alt={symbol}
           />
           <span className="font-semibold lg:text-lg">{symbol}</span>
-          <ShowWhen component={<IoChevronDownOutline />} when={!tokenIsEth} />
         </button>
       </div>
 
@@ -226,7 +224,7 @@ export function Swap() {
   };
 
   return (
-    <div className="p-2 border-[1px] border-white/30 rounded-xl flex flex-col gap-1">
+    <div className="p-2 border-[1px] border-white/30 rounded-xl flex flex-col gap-1 w-[350px]">
       <h3>Vault holds {vaultEthBalance} ETH</h3>
       <TokenInput
         id="mortageAmount"

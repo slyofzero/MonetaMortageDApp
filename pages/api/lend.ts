@@ -1,11 +1,14 @@
+import { getDocumentById } from "@/firebase";
 import { provider, web3 } from "@/rpc";
+import { StoredLoan } from "@/types";
 import { VAULT_PRIVATE_KEY } from "@/utils/env";
 import { ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export interface LendApiRequestBody {
-  address: string;
-  ethLent: number;
+  // address: string;
+  // ethLent: number;
+  id: string;
 }
 
 export interface LendApiResponse {
@@ -24,7 +27,18 @@ export default async function lendUserEth(
       if (!req.body)
         return res.status(400).json({ message: "Request body is missing" });
 
-      const { address, ethLent } = JSON.parse(req.body) as LendApiRequestBody;
+      const { id } = JSON.parse(req.body) as LendApiRequestBody;
+      const loan = await getDocumentById<StoredLoan>({
+        collectionName: "mortages",
+        id,
+      });
+
+      if (!loan)
+        return res.status(404).json({ message: `No loan for ID ${id} found` });
+      if (loan.status === "PAID")
+        return res.status(403).json({ message: "Eth has already been lent" });
+
+      const { ethLent, user: address } = loan;
 
       const wallet = new ethers.Wallet(VAULT_PRIVATE_KEY, provider);
       const gasPrice = await web3.eth.getGasPrice();

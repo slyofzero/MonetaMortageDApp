@@ -232,6 +232,44 @@ export const USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 export const loanPercentage = 0.4;
 export const pastDuePenalty = 5;
 
+export const collateralTokensList: { [key: string]: TokenInfo } = {
+  "0x5b342F03D126314d925Fa57A45654f92905e6451": {
+    name: "Moneta",
+    symbol: "MNTA",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
+  },
+  "0x5b342F03D126314d925Fa57A45654f92905e6450": {
+    name: "Doggie",
+    symbol: "DOG",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
+  },
+  "0x5b342F03D126314d925Fa57A45654f92905e6412": {
+    name: "Moneta",
+    symbol: "MNTA",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
+  },
+  "0x5b342F03D126314d925Fa57A45654f92905e6111": {
+    name: "Moneta",
+    symbol: "MNTA",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
+  },
+  "0x5b342F03D126314d925Fa57A45654f92905e6411": {
+    name: "Moneta",
+    symbol: "MNTA",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
+  },
+};
+
 export const tokensList: { [key: string]: TokenInfo } = {
   "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2": {
     name: "Ethereum",
@@ -240,11 +278,5 @@ export const tokensList: { [key: string]: TokenInfo } = {
     logoURI:
       "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
   },
-  "0x5b342F03D126314d925Fa57A45654f92905e6451": {
-    name: "Moneta",
-    symbol: "MNTA",
-    decimals: 18,
-    logoURI:
-      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
-  },
+  ...collateralTokensList,
 };

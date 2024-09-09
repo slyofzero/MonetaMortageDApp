@@ -2,7 +2,7 @@ import { useLoan } from "@/state";
 import { collateralTokensList } from "@/utils/constants";
 import { Image } from "./Common";
 import { classNames } from "@/utils";
-import { IoSearchOutline } from "react-icons/io5";
+// import { IoSearchOutline } from "react-icons/io5";
 
 interface TokenButtonProps {
   token: string;
@@ -37,15 +37,13 @@ function TokenButton({ token }: TokenButtonProps) {
 export function TokenSelector() {
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-1 flex-wrap justify-center">
-        {Object.keys(collateralTokensList)
-          .slice(0, 6)
-          .map((token, key) => (
-            <TokenButton token={token} key={key} />
-          ))}
+      <div className="flex gap-1 max-w-[500px] flex-wrap justify-center">
+        {Object.keys(collateralTokensList).map((token, key) => (
+          <TokenButton token={token} key={key} />
+        ))}
       </div>
 
-      <div className="flex justify-center items-center">
+      {/* <div className="flex justify-center items-center">
         <input
           type="text"
           className="border-[1px] border-solid border-white rounded-l-lg bg-black outline-none p-4 py-2 flex-grow"
@@ -53,7 +51,7 @@ export function TokenSelector() {
         <button className="bg-white text-black px-2 h-[42px] rounded-r-lg">
           <IoSearchOutline className="text-2xl font-bold w-fit" />
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

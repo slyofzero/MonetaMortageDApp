@@ -108,7 +108,7 @@ function TokenInput({
         {label}
       </label>
 
-      <div className="flex gap-4 justify-between items-center w-full">
+      <div className="grid grid-cols-2 gap-4 justify-between items-center w-full">
         <input
           type="text"
           className="bg-inherit outline-none text-2xl lg:text-3xl max-w-[180px] lg:max-w-[200px] flex-grow"
@@ -121,13 +121,13 @@ function TokenInput({
           value={value || ""}
         />
 
-        <button className="p-1 rounded-full bg-black uppercase flex gap-1 items-center justify-between h-fit ml-auto pr-2">
+        <button className="p-1 rounded-full bg-black uppercase flex gap-1 items-center justify-between h-fit ml-auto">
           <Image
             className="w-6 aspect-square rounded-full mr-1"
             src={logoURI}
             alt={symbol}
           />
-          <span className="font-semibold lg:text-lg">{symbol}</span>
+          <span className="font-semibold lg:text-lg pr-2">{symbol}</span>
         </button>
       </div>
 

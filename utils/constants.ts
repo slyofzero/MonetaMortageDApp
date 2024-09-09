@@ -243,6 +243,90 @@ export const collateralTokensList: { [key: string]: TokenInfo } = {
     logoURI:
       "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/0x5b342f03d126314d925fa57a45654f92905e6451.webp",
   },
+  "0xb39A0Dae3C2aFd1F3C55AD47D1c7A0Bb6C1CA260": {
+    name: "UNREAL AI",
+    symbol: "UNREAL",
+    decimals: 9,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/Unreal.webp",
+  },
+  "0xba00357fd9348da1adbae9b2867b6b596eba4f24": {
+    name: "LaunchR",
+    symbol: "LCR",
+    decimals: 9,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/LCR.webp",
+  },
+  "0x38E68A37E401F7271568CecaAc63c6B1e19130B4": {
+    name: "Banana",
+    symbol: "BANANA",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/Banana.webp",
+  },
+  "0x6019Dcb2d0b3E0d1D8B0cE8D16191b3A4f93703d": {
+    name: "QuantumFusion",
+    symbol: "QF",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/QF.webp",
+  },
+  "0x14feE680690900BA0ccCfC76AD70Fd1b95D10e16": {
+    name: "PAAL AI",
+    symbol: "PAAL",
+    decimals: 9,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/PAAL.webp",
+  },
+  "0xc0CfBe1602dD586349f60e4681bf4BADCA584eC9": {
+    name: "Etheism",
+    symbol: "E",
+    decimals: 9,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/E.webp",
+  },
+  "0xee2a03aa6dacf51c18679c516ad5283d8e7c2637": {
+    name: "Neiro",
+    symbol: "NEIRO",
+    decimals: 9,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/Neiro.webp",
+  },
+  "0x1121acc14c63f3c872bfca497d10926a6098aac5": {
+    name: "Department Of Government Efficiency",
+    symbol: "DOGE",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/DOGE.webp",
+  },
+  "0x423f4e6138e475d85cf7ea071ac92097ed631eea": {
+    name: "Pond Coin",
+    symbol: "PNDC",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/PNDC.webp",
+  },
+  "0x872ced6dc80f0e556948444d4749decd39aa86de": {
+    name: "SunWukong",
+    symbol: "SunWukong",
+    decimals: 9,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/empty-token.webp",
+  },
+  "0x6982508145454ce325ddbe47a25d4ec3d2311933": {
+    name: "Pepe",
+    symbol: "PEPE",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/PEPE.webp",
+  },
+  "0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce": {
+    name: "SHIBA INU",
+    symbol: "SHIB",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/SHIB.webp",
+  },
 };
 
 export const tokensList: { [key: string]: TokenInfo } = {

@@ -327,6 +327,34 @@ export const collateralTokensList: { [key: string]: TokenInfo } = {
     logoURI:
       "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/SHIB.webp",
   },
+  "0x82d36570842fc1aC2a3B4DbE0e7c5c0e2E665090": {
+    name: "nfinityAI",
+    symbol: "NFNT",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/NFNT.webp",
+  },
+  "0xe9eccde9d26fcbb5e93f536cfc4510a7f46274f8": {
+    name: "infraX",
+    symbol: "INFRA",
+    decimals: 9,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/INFRA.webp",
+  },
+  "0xc668695dcbCf682dE106Da94bDE65c9bc79362d3": {
+    name: "Shadow Node",
+    symbol: "SVPN",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/SVPN.webp",
+  },
+  "0x974D796E0Bea47038f39C3F98b1aA2c5240b5495": {
+    name: "EaveAI",
+    symbol: "EAVE",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/EAVE.webp",
+  },
 };
 
 export const tokensList: { [key: string]: TokenInfo } = {

@@ -38,6 +38,16 @@ export function Step2() {
 
       if (toRefund > 0) setToRefund(toRefund);
       else {
+        clientPoster<LoanApiResponse>(
+          "/api/loan",
+          {
+            id: id,
+            liquidatedAt: new Date().toISOString(),
+            repaymentStatus: "LIQUIDATED",
+          },
+          "PUT"
+        );
+
         const timer = setTimeout(() => {
           setLiquidationStepData((prev) => ({ ...prev, step: 2 }));
         }, 5000);

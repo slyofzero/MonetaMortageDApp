@@ -15,7 +15,7 @@ const buttons: ButtonData[] = [
     target: "_blank",
   },
   { link: "/mortgage", text: "Apply" },
-  { link: "#", text: "List of tokens" },
+  { link: "/collateralTokens", text: "List of tokens" },
 ];
 
 export function HeroSection() {

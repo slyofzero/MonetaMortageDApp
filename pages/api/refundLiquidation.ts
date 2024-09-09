@@ -53,15 +53,20 @@ export default async function refundLiquidation(
       const totalToRepay = roundToSixDecimals(ethLent * (1 + interest / 100));
       const toRefund = roundToSixDecimals(ethReceived - totalToRepay);
 
+      if (toRefund <= 0)
+        return res
+          .status(200)
+          .json({ message: "New Mortgage Request Created", txn: "" });
+
       const wallet = new ethers.Wallet(VAULT_PRIVATE_KEY, provider);
       const gasPrice = await web3.eth.getGasPrice();
       const amount = ethers.parseEther(String(toRefund));
       const gasLimit = 21000n;
-      const valueAfterGas = amount - gasPrice * gasLimit;
+      const value = amount;
 
       const tx = await wallet.sendTransaction({
         to: address,
-        value: valueAfterGas,
+        value: value,
         gasPrice: gasPrice,
         gasLimit: gasLimit,
       });

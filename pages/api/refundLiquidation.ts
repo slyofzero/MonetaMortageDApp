@@ -51,7 +51,7 @@ export default async function refundLiquidation(
         ? daysSinceLoan + pastDuePenalty
         : daysSinceLoan;
       const totalToRepay = roundToSixDecimals(ethLent * (1 + interest / 100));
-      const toRefund = ethReceived - totalToRepay;
+      const toRefund = roundToSixDecimals(ethReceived - totalToRepay);
 
       const wallet = new ethers.Wallet(VAULT_PRIVATE_KEY, provider);
       const gasPrice = await web3.eth.getGasPrice();

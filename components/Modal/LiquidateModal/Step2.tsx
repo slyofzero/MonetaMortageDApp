@@ -1,3 +1,4 @@
+import { ShowWhen } from "@/components/Utils";
 import { LoanApiResponse } from "@/pages/api/loan";
 import { FEStoredLoan } from "@/pages/api/loans";
 import {
@@ -18,6 +19,7 @@ export function Step2() {
   const [interest, setInterest] = useState(0);
   const [totalToRepay, setTotalToRepay] = useState(0);
   const [toRefund, setToRefund] = useState(0);
+  const [error, setError] = useState(false);
 
   useEffect(
     () => {
@@ -32,7 +34,7 @@ export function Step2() {
       setInterest(interest);
       const totalToRepay = roundToSixDecimals(ethLent * (1 + interest / 100));
       setTotalToRepay(totalToRepay);
-      const toRefund = ethReceived - totalToRepay;
+      const toRefund = roundToSixDecimals(ethReceived - totalToRepay);
 
       if (toRefund > 0) setToRefund(toRefund);
       else {
@@ -78,7 +80,7 @@ export function Step2() {
               refundTxn: txn,
               step: 2,
             }));
-          }
+          } else setError(true);
         }
       };
 
@@ -90,24 +92,40 @@ export function Step2() {
 
   return (
     <div className="flex flex-col items-center justify-center text-sm lg:text-lg">
-      <div className="flex flex-col gap-4">
-        <p>
-          Received <span className="font-semibold">{ethReceived} ETH</span> upon
-          token selling
-        </p>
-        <p>
-          Total interest to date -{" "}
-          <span className="font-semibold">{interest}%</span>
-        </p>
-        <p>
-          Total ETH to repay -{" "}
-          <span className="font-semibold">{totalToRepay} ETH</span>
-        </p>
-        <p>
-          To refund -{" "}
-          <span className="font-semibold text-yellow-400">{toRefund} ETH</span>
-        </p>
-      </div>
+      <ShowWhen
+        component={
+          <div className="flex flex-col gap-4">
+            <p>
+              Received <span className="font-semibold">{ethReceived} ETH</span>{" "}
+              upon token selling
+            </p>
+            <p>
+              Total interest to date -{" "}
+              <span className="font-semibold">{interest}%</span>
+            </p>
+            <p>
+              Total ETH to repay -{" "}
+              <span className="font-semibold">{totalToRepay} ETH</span>
+            </p>
+            <p>
+              To refund -{" "}
+              <span className="font-semibold text-yellow-400">
+                {toRefund} ETH
+              </span>
+            </p>
+          </div>
+        }
+        when={!error}
+        otherwise={
+          <>
+            <span className="text-red-500 whitespace-normal text-center">
+              There was an error in refunding your remaining ETH, please contact
+              support and give them the hash -{" "}
+              <span className="font-semibold">{id}</span>
+            </span>
+          </>
+        }
+      />
     </div>
   );
 }

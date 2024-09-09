@@ -1,3 +1,4 @@
+import { ShowWhen } from "@/components/Utils";
 import {
   LiquidateApiRequestBody,
   LiquidateApiResponse,
@@ -8,13 +9,14 @@ import { useLiquidationStep } from "@/state";
 import { clientPoster } from "@/utils/api";
 import { collateralTokensList } from "@/utils/constants";
 import { getEthRecieved } from "@/utils/web3";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function Step1() {
   const { liquidationStepData, setLiquidationStepData } = useLiquidationStep();
   const loan = liquidationStepData.loan as FEStoredLoan;
   const { collateralToken, collateralAmount } = loan;
   const { symbol } = collateralTokensList[collateralToken] || {};
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const sellCollateral = async () => {
@@ -44,6 +46,8 @@ export function Step1() {
           step: 1,
           ethReceived,
         }));
+      } else {
+        setError(true);
       }
     };
 
@@ -52,11 +56,26 @@ export function Step1() {
 
   return (
     <div className="flex items-center justify-center lg:text-lg whitespace-nowrap flex-wrap">
-      Selling{" "}
-      <span className="text-yellow-400 font-bold mx-2 flex items-center flex-wrap">
-        {collateralAmount} {symbol}
-      </span>{" "}
-      for ETH...
+      <ShowWhen
+        component={
+          <>
+            Selling{" "}
+            <span className="text-yellow-400 font-bold mx-2 flex items-center flex-wrap">
+              {collateralAmount} {symbol}
+            </span>{" "}
+            for ETH...
+          </>
+        }
+        when={!error}
+        otherwise={
+          <>
+            <span className="text-red-500 whitespace-normal text-center">
+              There was an error in selling your tokens, please close the modal
+              and try again.
+            </span>
+          </>
+        }
+      />
     </div>
   );
 }

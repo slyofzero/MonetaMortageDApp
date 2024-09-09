@@ -37,7 +37,7 @@ export function Step1() {
   const [repaymentBreakdownData, setRepaymentBreakdownData] =
     useState<RepaymentBreakdown>(defaultRepaymentBreakdown);
 
-  const { sendTransaction, data, isSuccess } = useSendTransaction();
+  const { sendTransaction, data, isSuccess, isError } = useSendTransaction();
 
   // Calculate amount to repay
   useEffect(() => {
@@ -102,7 +102,7 @@ export function Step1() {
   const { daysSinceLoan, penalty, totalToRepay, repaymentUnder24h } =
     repaymentBreakdownData;
 
-  return (
+  const paymentBreakdown = (
     <div className="flex flex-col gap-8 items-center justify-center text-sm lg:text-base whitespace-nowrap flex-wrap">
       <div className="grid grid-cols-2 w-64 lg:w-fit gap-x-4 lg:gap-x-12">
         <span className="font-semibold">ETH Lent</span>
@@ -144,5 +144,20 @@ export function Step1() {
         Repay {totalToRepay} ETH
       </button>
     </div>
+  );
+
+  return (
+    <ShowWhen
+      component={paymentBreakdown}
+      when={!isError}
+      otherwise={
+        <>
+          <span className="text-red-500 whitespace-normal text-center">
+            There was an error in repaying ETH to the vault, please close the
+            modal and try again.
+          </span>
+        </>
+      }
+    />
   );
 }

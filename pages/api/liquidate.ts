@@ -11,7 +11,7 @@ interface ScriptLiquidateApiResponse {
 }
 
 export interface LiquidateApiResponse {
-  message: string;
+  message?: string;
   txn?: string;
 }
 
@@ -39,6 +39,10 @@ export default async function liquidateCollateral(
         // @ts-ignore
         { "Content-Type": "application/json" }
       );
+
+      if (response.response !== 200)
+        return res.status(response.response).json(response.data);
+
       const txn = response.data.txn;
 
       return res

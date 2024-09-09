@@ -77,7 +77,7 @@ export function Step1() {
   useEffect(
     () => {
       if (data) {
-        const updateMortageDepositLink = async () => {
+        const updateMortgageDepositLink = async () => {
           await clientPoster<LoanApiResponse>(
             "/api/loan",
             {
@@ -92,7 +92,7 @@ export function Step1() {
             step: 1,
           }));
         };
-        updateMortageDepositLink();
+        updateMortgageDepositLink();
       }
     },
     // eslint-disable-next-line

@@ -46,10 +46,10 @@ export default async function userLoan(
 
       return res
         .status(200)
-        .json({ message: "New Mortage Request Created", id });
+        .json({ message: "New Mortgage Request Created", id });
     } catch (error) {
       // eslint-disable-next-line
-      console.error("Error when creating a mortage document:", error);
+      console.error("Error when creating a mortgage document:", error);
       return res.status(500).json({
         message: (error as Error).message || "An unexpected error occurred",
       });
@@ -60,7 +60,7 @@ export default async function userLoan(
 
     const body: Partial<StoredLoan> = JSON.parse(req.body);
     const { id, ...updates } = body;
-    if (!id) return res.status(400).json({ message: "Mortage ID is missing" });
+    if (!id) return res.status(400).json({ message: "Mortgage ID is missing" });
 
     const loanData = await getDocumentById<StoredLoan>({
       collectionName: "mortages",
@@ -104,7 +104,7 @@ export default async function userLoan(
       id: id,
       updates,
     });
-    return res.status(200).json({ message: `Mortage ID ${id} updated` });
+    return res.status(200).json({ message: `Mortgage ID ${id} updated` });
   } else {
     return res.status(405).json({
       message: "API method not allowed",

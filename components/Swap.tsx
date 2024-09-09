@@ -248,7 +248,7 @@ export function Swap() {
         <h3>Vault holds {vaultEthBalance} ETH</h3>
         <TokenInput
           id="mortageAmount"
-          label="Mortage"
+          label="Mortgage"
           tokenAddress={loan.collateralToken}
           onChange={onInputAmountChange}
           value={loan.collateralAmount}

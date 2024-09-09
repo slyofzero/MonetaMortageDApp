@@ -19,7 +19,7 @@ const disclaimerText: string[] = [
   "2. You fail to repay it back in 30 Days, in that case, the tokens will be liqudiated and the amount left after (Loan amount + interest + penalty) will be credited to your wallet.",
 ];
 
-export function Mortage() {
+export function Mortgage() {
   const { isConnected, address } = useAccount();
   const { loan } = useLoan();
   const [insufficientBalance, setInsufficientBalance] = useState(false);

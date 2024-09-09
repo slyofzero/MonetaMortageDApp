@@ -1,3 +1,3 @@
 export * from "./Homepage";
-export * from "./Mortage";
+export * from "./Mortgage";
 export * from "./Loans";

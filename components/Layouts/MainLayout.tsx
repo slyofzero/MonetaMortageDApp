@@ -12,7 +12,7 @@ interface Props {
 
 const buttons: ButtonData[] = [
   { link: "/", text: "Home" },
-  { link: "/mortage", text: "Apply" },
+  { link: "/mortgage", text: "Apply" },
   { link: "/loans", text: "Your loans" },
 ];
 

@@ -46,7 +46,7 @@ export default async function liquidateCollateral(
         .json({ message: `Sold collateral for loan ID ${loanId}`, txn });
     } catch (error) {
       // eslint-disable-next-line
-      console.error("Error when creating a mortage document:", error);
+      console.error("Error when creating a mortgage document:", error);
       return res.status(500).json({
         message: (error as Error).message || "An unexpected error occurred",
       });

@@ -194,7 +194,7 @@ export function Loans() {
         You haven&apos;t applied for any loans yet
       </h3>
       <Link
-        href={"/mortage"}
+        href={"/mortgage"}
         className="bg-[#00FF47] p-4 py-2 rounded-lg text-black font-semibold text-lg"
       >
         Click here to apply

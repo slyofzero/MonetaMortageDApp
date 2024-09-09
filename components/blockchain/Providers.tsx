@@ -17,7 +17,7 @@ import { WagmiProvider } from "wagmi";
 const { wallets } = getDefaultWallets();
 
 const config = getDefaultConfig({
-  appName: "MonetaMortageDApp",
+  appName: "MonetaMortgageDApp",
   projectId: "YOUR_PROJECT_ID",
   wallets: [
     ...wallets,

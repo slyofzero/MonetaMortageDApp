@@ -55,7 +55,7 @@ export default async function lendUserEth(
 
       return res
         .status(200)
-        .json({ message: "New Mortage Request Created", txn: tx.hash });
+        .json({ message: "New Mortgage Request Created", txn: tx.hash });
     } catch (error) {
       // eslint-disable-next-line
       console.error("Error when lending ETH:", error);

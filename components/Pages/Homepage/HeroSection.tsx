@@ -14,7 +14,7 @@ const buttons: ButtonData[] = [
     text: "Docs",
     target: "_blank",
   },
-  { link: "/mortage", text: "Apply" },
+  { link: "/mortgage", text: "Apply" },
   { link: "#", text: "List of tokens" },
 ];
 
@@ -22,8 +22,8 @@ export function HeroSection() {
   return (
     <div className="flex flex-col gap-8 items-center justify-center flex-grow w-fit mx-auto">
       <div className="flex flex-col gap-4 text-center bg-white text-black py-6 px-4 lg:px-16 rounded-lg">
-        <h3 className="text-2xl font-semibold">Mortage Tokens and Loan ETH</h3>
-        <h3>Mortage prelisted tokens</h3>
+        <h3 className="text-2xl font-semibold">Mortgage Tokens and Loan ETH</h3>
+        <h3>Mortgage prelisted tokens</h3>
 
         <div className="mt-8 flex lg:flex-row justify-between gap-4 flex-wrap">
           {buttons.map(({ link, text, target }, key) => (

@@ -7,12 +7,13 @@ export interface LiquidateApiRequestBody {
 }
 
 interface ScriptLiquidateApiResponse {
-  txn: string;
+  message: string;
+  jobId: string;
 }
 
 export interface LiquidateApiResponse {
-  message?: string;
-  txn?: string;
+  message: string;
+  jobId?: string;
 }
 
 export default async function liquidateCollateral(
@@ -43,11 +44,7 @@ export default async function liquidateCollateral(
       if (response.response !== 200)
         return res.status(response.response).json(response.data);
 
-      const txn = response.data.txn;
-
-      return res
-        .status(200)
-        .json({ message: `Sold collateral for loan ID ${loanId}`, txn });
+      return res.status(200).json(response.data);
     } catch (error) {
       // eslint-disable-next-line
       console.error("Error when creating a mortgage document:", error);

@@ -8,3 +8,7 @@ export function daysSince(seconds: number) {
   const currentTime = moment();
   return currentTime.diff(moment.unix(seconds), "days");
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

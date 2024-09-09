@@ -1,4 +1,5 @@
 import { ShowWhen } from "@/components/Utils";
+import { JobStatusApiResponse } from "@/pages/api/jobStatus";
 import {
   LiquidateApiRequestBody,
   LiquidateApiResponse,
@@ -6,7 +7,8 @@ import {
 import { LoanApiResponse } from "@/pages/api/loan";
 import { FEStoredLoan } from "@/pages/api/loans";
 import { useLiquidationStep } from "@/state";
-import { clientPoster } from "@/utils/api";
+import { sleep } from "@/utils";
+import { clientFetcher, clientPoster } from "@/utils/api";
 import { collateralTokensList } from "@/utils/constants";
 import { getEthRecieved } from "@/utils/web3";
 import { useEffect, useState } from "react";
@@ -27,27 +29,47 @@ export function Step1() {
         "/api/liquidate",
         body
       );
-      const txn = response.data.txn;
-      if (txn) {
-        const ethReceived = await getEthRecieved(txn);
+      const jobId = response.data.jobId;
 
-        await clientPoster<LoanApiResponse>(
-          "/api/loan",
-          {
-            id: liquidationStepData.id,
-            liquidateTxn: txn,
-          },
-          "PUT"
+      for (let i = 0; i < 20; i++) {
+        const response = await clientFetcher<JobStatusApiResponse>(
+          `/api/jobStatus?jobId=${jobId}`
         );
 
-        setLiquidationStepData((prev) => ({
-          ...prev,
-          liquidateTxn: txn,
-          step: 1,
-          ethReceived,
-        }));
-      } else {
-        setError(true);
+        const { status, txn } = response.data;
+
+        if (status !== "Completed") {
+          if (status === "Failed") {
+            setError(true);
+            break;
+          }
+
+          await sleep(30 * 1e3);
+          continue;
+        }
+
+        if (txn) {
+          const ethReceived = await getEthRecieved(txn);
+
+          await clientPoster<LoanApiResponse>(
+            "/api/loan",
+            {
+              id: liquidationStepData.id,
+              liquidateTxn: txn,
+            },
+            "PUT"
+          );
+
+          setLiquidationStepData((prev) => ({
+            ...prev,
+            liquidateTxn: txn,
+            step: 1,
+            ethReceived,
+          }));
+        } else {
+          setError(true);
+        }
+        break;
       }
     };
 

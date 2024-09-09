@@ -129,7 +129,8 @@ export function Loan({ loan }: { loan: FEStoredLoan }) {
 
           <Link
             className="font-medium underline text-xs"
-            href={`https://etherscan.com/tx/${collateralDepositTxn}`}
+            href={`https://etherscan.io/tx/${collateralDepositTxn}`}
+            target="_blank"
           >
             Deposit Txn
           </Link>
@@ -142,7 +143,8 @@ export function Loan({ loan }: { loan: FEStoredLoan }) {
 
           <Link
             className="font-medium underline text-xs ml-auto"
-            href={`https://etherscan.com/tx/${ethLentTxn}`}
+            href={`https://etherscan.io/tx/${ethLentTxn}`}
+            target="_blank"
           >
             Lent Txn
           </Link>

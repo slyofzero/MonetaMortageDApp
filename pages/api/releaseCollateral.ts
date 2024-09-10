@@ -1,6 +1,7 @@
 import { getDocumentById } from "@/firebase";
 import { provider } from "@/rpc";
 import { StoredLoan } from "@/types";
+import { collateralTokensList } from "@/utils/constants";
 import { VAULT_PRIVATE_KEY } from "@/utils/env";
 import { ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -54,7 +55,9 @@ export default async function releaseCollateralTokens(
         erc20Abi,
         wallet
       );
-      const amount = BigInt(collateralAmount * 1e18);
+
+      const { decimals } = collateralTokensList[collateralToken];
+      const amount = ethers.parseUnits(String(collateralAmount), decimals);
       const tx = await tokenContract.transfer(user, amount);
 
       return res

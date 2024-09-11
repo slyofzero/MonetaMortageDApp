@@ -49,7 +49,9 @@ export function Mortgage() {
   useEffect(() => {
     const isInsufficientBalance =
       Number(loan.collateralAmount) > userCollateralTokenBalance;
-    setInsufficientBalance(isInsufficientBalance);
+    setInsufficientBalance(
+      isInsufficientBalance || Number(loan.collateralAmount) === 0
+    );
 
     if (isInsufficientBalance) setSubmitBtnText("Insufficient Balance");
     else if (!loan.collateralAmount)

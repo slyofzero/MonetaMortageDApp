@@ -355,6 +355,41 @@ export const collateralTokensList: { [key: string]: TokenInfo } = {
     logoURI:
       "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/EAVE.webp",
   },
+  "0x5138EBe7acaAE209d6F0B651E4D02a67EF61f436": {
+    name: "Graffiti",
+    symbol: "GRAF",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/GRAF.webp",
+  },
+  "0xbec771d15f7e67bc0bb4571c7eb409228cc6fef9": {
+    name: "BribeAI",
+    symbol: "BRAI",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/BRAI.webp",
+  },
+  "0x922D8563631B03C2c4cf817f4d18f6883AbA0109": {
+    name: "Houdini Swap",
+    symbol: "LOCK",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/LOCK.webp",
+  },
+  "0xa00453052A36D43A99Ac1ca145DFe4A952cA33B8": {
+    name: "Cate",
+    symbol: "CATE",
+    decimals: 9,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/CATE.webp",
+  },
+  "0xed1aecc815c00073ba6707b1cd4bd7f833da7a38": {
+    name: "Intel X",
+    symbol: "INTX",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/INTX.webp",
+  },
 };
 
 export const tokensList: { [key: string]: TokenInfo } = {

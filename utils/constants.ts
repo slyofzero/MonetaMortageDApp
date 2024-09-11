@@ -390,6 +390,13 @@ export const collateralTokensList: { [key: string]: TokenInfo } = {
     logoURI:
       "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/INTX.webp",
   },
+  "0x3f57c35633cb29834bb7577ba8052eab90f52a02": {
+    name: "Defender Bot",
+    symbol: "DFNDR",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/DFNDR.webp",
+  },
 };
 
 export const tokensList: { [key: string]: TokenInfo } = {

@@ -397,6 +397,13 @@ export const collateralTokensList: { [key: string]: TokenInfo } = {
     logoURI:
       "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/DFNDR.webp",
   },
+  "0x92f419fb7a750aed295b0ddf536276bf5a40124f": {
+    name: "Taτsu",
+    symbol: "TATSU",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/TATSU.webp",
+  },
 };
 
 export const tokensList: { [key: string]: TokenInfo } = {

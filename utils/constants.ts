@@ -235,7 +235,10 @@ export const USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 export const loanPercentage = 0.4;
 export const pastDuePenalty = 5;
 
-export const collateralTokensList: { [key: string]: TokenInfo } = {
+export interface ICollateralTokensList {
+  [key: string]: TokenInfo;
+}
+export const collateralTokensList: ICollateralTokensList = {
   "0x5b342F03D126314d925Fa57A45654f92905e6451": {
     name: "Moneta",
     symbol: "MNTA",

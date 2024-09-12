@@ -5,7 +5,7 @@ import { Dispatch, ReactNode } from "react";
 interface Props {
   children: ReactNode;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  size?: "md" | "lg";
+  size?: "md" | "lg" | "sm";
 }
 
 export function Modal({ children, setShowModal, size }: Props) {
@@ -31,7 +31,11 @@ export function Modal({ children, setShowModal, size }: Props) {
           tabIndex={-1}
           className={classNames(
             "flex flex-col relative bg-black border-[1px] border-solid border-white/50 z-50 box-border outline-none sm:mx-6 sm:my-16 shadow-small overflow-y-hidden w-full mx-4 my-auto rounded-xl py-16 md:rounded-2xl shadow-input bg-neutral-900 lg:h-full",
-            size === "lg" ? "max-w-[40rem]" : "max-w-md"
+            size === "lg"
+              ? "max-w-[40rem]"
+              : size === "sm"
+                ? "max-w-sm"
+                : "max-w-md"
           )}
           id=":rh:"
           data-open="true"

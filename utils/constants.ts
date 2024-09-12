@@ -407,6 +407,76 @@ export const collateralTokensList: ICollateralTokensList = {
     logoURI:
       "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/TATSU.webp",
   },
+  "0x41d06390b935356b46ad6750bda30148ad2044a4": {
+    name: "Husby",
+    symbol: "HUSBY",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/HUSBY.webp",
+  },
+  "0x516D339afA72f6959b8E06a31FBc32Da3E49348B": {
+    name: "Connect",
+    symbol: "CNCT",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/CNCT.webp",
+  },
+  "0x24EdDeD3f03abb2e9D047464294133378bddB596": {
+    name: "Sect Bot",
+    symbol: "SECT",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/SECT.jpg",
+  },
+  "0x0aa8a7d1fb4c64b3b1dcea9a7ade81c59c25b95b": {
+    name: "AstraAI",
+    symbol: "ASTRA",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/ASTRA.webp",
+  },
+  "0x5da151b95657e788076d04d56234bd93e409cb09": {
+    name: "OTSea",
+    symbol: "OTSea",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/OTSea.webp",
+  },
+  "0x80122c6a83c8202ea365233363d3f4837d13e888": {
+    name: "Messier",
+    symbol: "M87",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/M87.webp",
+  },
+  "0xcb76314c2540199f4b844d4ebbc7998c604880ca": {
+    name: "Strawberry AI",
+    symbol: "BERRY",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/BERRY.webp",
+  },
+  "0xE1C8d908f0e495Cf6D8459547d1d28B72bF04bf2": {
+    name: "TesseractAI",
+    symbol: "TSAI",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/TSAI.webp",
+  },
+  "0x048d07bd350ba516b84587e147284881b593eb86": {
+    name: "Synk",
+    symbol: "SYNC",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/SYNC.webp",
+  },
+  "0x289ff00235d2b98b0145ff5d4435d3e92f9540a6": {
+    name: "Book of Ethereum",
+    symbol: "BODE",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/BODE.webp",
+  },
 };
 
 export const tokensList: { [key: string]: TokenInfo } = {

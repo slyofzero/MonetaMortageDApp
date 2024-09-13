@@ -6,9 +6,10 @@ interface Props {
   children: ReactNode;
   setShowModal: Dispatch<SetStateAction<boolean>>;
   size?: "md" | "lg" | "sm";
+  className?: string;
 }
 
-export function Modal({ children, setShowModal, size }: Props) {
+export function Modal({ children, setShowModal, size, className }: Props) {
   function onClick() {
     setShowModal((prev) => !prev);
   }
@@ -30,12 +31,13 @@ export function Modal({ children, setShowModal, size }: Props) {
           role="dialog"
           tabIndex={-1}
           className={classNames(
-            "flex flex-col relative bg-black border-[1px] border-solid border-white/50 z-50 box-border outline-none sm:mx-6 sm:my-16 shadow-small overflow-y-hidden w-full mx-4 my-auto rounded-xl py-16 md:rounded-2xl shadow-input bg-neutral-900 lg:h-full",
+            "flex flex-col relative bg-black border-[1px] border-solid border-white/50 z-50 box-border outline-none sm:mx-6 sm:my-16 shadow-small overflow-y-hidden w-full mx-4 my-auto rounded-xl py-16 md:rounded-2xl shadow-input bg-neutral-900",
             size === "lg"
               ? "max-w-[40rem]"
               : size === "sm"
                 ? "max-w-sm"
-                : "max-w-md"
+                : "max-w-md",
+            className || ""
           )}
           id=":rh:"
           data-open="true"

@@ -47,20 +47,29 @@ export function CollateralTokensList({ setShowModal }: Props) {
     useState<ICollateralTokensList>(collateralTokensList);
 
   const searchToken = (e: ChangeEvent<HTMLInputElement>) => {
-    const token = e.target.value;
-    if (isValidEthAddress(token)) {
-      const tokenData = collateralTokensList[token];
-      if (tokenData) setSearchedToken({ [token]: tokenData });
+    const value = e.target.value;
+    if (isValidEthAddress(value)) {
+      const tokenData = collateralTokensList[value];
+      if (tokenData) setSearchedToken({ [value]: tokenData });
       else setSearchedToken({});
     } else {
-      setSearchedToken(collateralTokensList);
+      const newCollateralTokensList: ICollateralTokensList = {};
+      Object.entries(collateralTokensList)
+        .filter(
+          ([, { name, symbol }]) =>
+            name.toLowerCase().includes(value) ||
+            symbol.toLowerCase().includes(value)
+        )
+        .forEach(([token, value]) => (newCollateralTokensList[token] = value));
+
+      setSearchedToken(newCollateralTokensList);
     }
   };
 
   const collateralTokens = Object.keys(searchedToken);
 
   return (
-    <Modal size="sm" setShowModal={setShowModal}>
+    <Modal className="h-full" size="sm" setShowModal={setShowModal}>
       <div className="flex flex-col gap-4 overflow-auto [&>div]:px-4 h-full">
         <div className="flex justify-center items-center">
           <input

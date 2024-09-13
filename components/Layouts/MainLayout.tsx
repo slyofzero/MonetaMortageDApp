@@ -14,6 +14,7 @@ const buttons: ButtonData[] = [
   { link: "/", text: "Home" },
   { link: "/mortgage", text: "Apply" },
   { link: "/loans", text: "Your loans" },
+  { link: "/stats", text: "Stats" },
 ];
 
 export function MainLayout({ children, className }: Props) {

@@ -6,18 +6,10 @@ import { MainLayout } from "@/components";
 import { useApi } from "@/hooks/useApi";
 import { roundToSixDecimals } from "@/utils/web3";
 
-const defaultStats: VaultStatsScriptApiResponse = {
-  interestEarned: 0,
-  loanCount: 0,
-  loanValue: 0,
-  tokensValue: 0,
-  vaultEth: 0,
-};
-
 export default function StatsPage() {
   const { data } = useApi<VaultStatsApiResponse>("/api/stats");
 
-  const stats = data?.data || defaultStats;
+  const stats = data?.data || {};
 
   //   const { data: stats } = data as VaultStatsApiResponse;
   const { vaultEth, interestEarned, loanValue, loanCount, tokensValue } =
@@ -34,7 +26,9 @@ export default function StatsPage() {
             Total Capital Value -
           </span>
           <span className="text-lg">
-            {roundToSixDecimals(vaultEth + tokensValue)} ETH
+            {vaultEth
+              ? `${roundToSixDecimals(vaultEth + tokensValue)} ETH`
+              : "-"}
           </span>
         </div>
 
@@ -42,7 +36,9 @@ export default function StatsPage() {
           <span className="text-lg lg:text-2xl font-bold">
             Total ETH Value -
           </span>
-          <span className="lg:text-lg">{roundToSixDecimals(vaultEth)} ETH</span>
+          <span className="lg:text-lg">
+            {vaultEth ? `${roundToSixDecimals(vaultEth)} ETH` : "-"}
+          </span>
         </div>
 
         <div className={rowClassName}>
@@ -50,7 +46,7 @@ export default function StatsPage() {
             Total Tokens Value -
           </span>
           <span className="lg:text-lg">
-            {roundToSixDecimals(tokensValue)} ETH
+            {tokensValue ? `${roundToSixDecimals(tokensValue)} ETH` : "-"}
           </span>
         </div>
 
@@ -58,14 +54,18 @@ export default function StatsPage() {
           <span className="text-lg lg:text-2xl font-bold">
             Total Loans Financed -
           </span>
-          <span className="lg:text-lg">{loanCount.toLocaleString()}</span>
+          <span className="lg:text-lg">
+            {loanCount ? `${loanCount.toLocaleString()}` : "-"}
+          </span>
         </div>
 
         <div className={rowClassName}>
           <span className="text-lg lg:text-2xl font-bold">
             Total ETH Lent -
           </span>
-          <span className="lg:text-lg">{loanValue.toLocaleString()} ETH</span>
+          <span className="lg:text-lg">
+            {loanValue ? `${loanValue.toLocaleString()} ETH` : "-"}
+          </span>
         </div>
 
         <div className={rowClassName}>
@@ -73,7 +73,9 @@ export default function StatsPage() {
             Interest earned -
           </span>
           <span className="lg:text-lg">
-            {roundToSixDecimals(interestEarned).toLocaleString()} ETH
+            {interestEarned
+              ? `${roundToSixDecimals(interestEarned).toLocaleString()} ETH`
+              : "-"}
           </span>
         </div>
 
@@ -82,7 +84,9 @@ export default function StatsPage() {
             Avg. Interest earned / week -
           </span>
           <span className="lg:text-lg">
-            {roundToSixDecimals(interestEarned / 7)} ETH
+            {interestEarned
+              ? `${roundToSixDecimals(interestEarned / 7)} ETH`
+              : "-"}
           </span>
         </div>
       </div>

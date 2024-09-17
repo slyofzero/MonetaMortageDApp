@@ -106,7 +106,7 @@ export function Step1() {
 
         <span className="font-semibold">Interest</span>
         <span className="ml-auto">
-          {daysSinceLoan * interestDiscount} * 1%{" "}
+          {daysSinceLoan} * {1 * interestDiscount}%{" "}
           {penalty && `+ ${pastDuePenalty * interestDiscount}%`}
         </span>
 

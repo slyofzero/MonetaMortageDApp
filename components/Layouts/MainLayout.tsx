@@ -18,6 +18,20 @@ const buttons: ButtonData[] = [
 ];
 
 export function MainLayout({ children, className }: Props) {
+  const navButtons = (
+    <>
+      {buttons.map(({ link, text }, key) => (
+        <Link
+          key={key}
+          className="bg-black text-white p-2 rounded-lg w-fit text-center lg:w-32"
+          href={link}
+        >
+          {text}
+        </Link>
+      ))}
+    </>
+  );
+
   return (
     <main
       className={classNames(
@@ -32,21 +46,17 @@ export function MainLayout({ children, className }: Props) {
         </Link>
 
         <nav className="mx-auto hidden lg:flex items-center gap-0">
-          {buttons.map(({ link, text }, key) => (
-            <Link
-              key={key}
-              className="bg-black text-white p-2 rounded-lg w-fit text-center lg:w-32"
-              href={link}
-            >
-              {text}
-            </Link>
-          ))}
+          {navButtons}
         </nav>
 
         <div className="flex flex-col lg:flex-row items-center gap-4">
           <ConnectButton />
         </div>
       </header>
+
+      <nav className="flex lg:hidden justify-between items-center gap-0">
+        {navButtons}
+      </nav>
 
       {children}
     </main>

@@ -17,6 +17,7 @@ import { collateralTokensList } from "@/utils/constants";
 const disclaimerText: string[] = [
   "1. Your collateral assets value drops to +5% of Your Loan Value + Total interest + Penalty (if any) accumulated till that day.",
   "2. You fail to repay it back in 30 Days, in that case, the tokens will be liqudiated and the amount left after (Loan amount + interest + penalty) will be credited to your wallet.",
+  "3. If the loan is paid back within 24 hours, a foreclosure fee of 0.5 ETH would be applied during repayment.",
 ];
 
 export function Mortgage() {
@@ -26,7 +27,7 @@ export function Mortgage() {
   const [userCollateralTokenBalance, setUserCollateralTokenBalance] =
     useState(0);
   const [openPaymentModel, setOpenPaymentModal] = useState(false);
-  const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(true);
   const { resetPaymentStepData, setPaymentStepData } = usePaymentStep();
   const [submitBtnText, setSubmitBtnText] = useState<string>("Complete Loan");
 

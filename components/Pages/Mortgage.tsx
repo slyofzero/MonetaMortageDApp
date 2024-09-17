@@ -12,12 +12,12 @@ import { PaymentModal } from "../Modal/PaymentModal";
 import { LoanApiResponse } from "@/pages/api/loan";
 import { TokenSelector } from "../TokenSelector";
 import { DisclaimerModal } from "../Modal/DisclaimerModal";
-import { collateralTokensList } from "@/utils/constants";
+import { collateralTokensList, platformCharge } from "@/utils/constants";
 
 const disclaimerText: string[] = [
   "1. Your collateral assets value drops to +5% of Your Loan Value + Total interest + Penalty (if any) accumulated till that day.",
   "2. You fail to repay it back in 30 Days, in that case, the tokens will be liqudiated and the amount left after (Loan amount + interest + penalty) will be credited to your wallet.",
-  "3. If the loan is paid back within 24 hours, a foreclosure fee of 0.5 ETH would be applied during repayment.",
+  `3. If the loan is paid back within 24 hours, a foreclosure fee of ${platformCharge} ETH would be applied during repayment.`,
 ];
 
 export function Mortgage() {

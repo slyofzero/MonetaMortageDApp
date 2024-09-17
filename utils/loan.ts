@@ -5,7 +5,7 @@ import { monetaCA, pastDuePenalty, platformCharge } from "./constants";
 import { RepaymentBreakdown } from "@/pages/api/getRepaymentBreakdown";
 
 export async function getLoanPendingRepayment(loan: StoredLoan) {
-  const { loanActiveAt, duration, ethLent, user, ethRepaidSoFar } = loan;
+  const { loanActiveAt, duration, ethLent, user } = loan;
   const currentTime = moment();
   const loanActiveTimestamp = moment.unix(loanActiveAt?.seconds || 0);
   const daysSinceLoan = currentTime.diff(loanActiveTimestamp, "days");
@@ -27,17 +27,15 @@ export async function getLoanPendingRepayment(loan: StoredLoan) {
   const totalToRepay = roundToSixDecimals(
     ethLent * (1 + interest / 100) + loanPlatformCharge
   );
-  const ethToRepay = totalToRepay - (ethRepaidSoFar || 0);
 
   const breakdown: RepaymentBreakdown = {
     daysSinceLoan,
     interest,
     penalty: applyPenalty,
-    totalToRepay: ethToRepay,
+    totalToRepay,
     repaymentUnder24h: daysSinceLoan === 0,
     isMntaHolder,
     interestDiscount,
-    ethRepaidSoFar: ethRepaidSoFar || 0,
   };
   return breakdown;
 }

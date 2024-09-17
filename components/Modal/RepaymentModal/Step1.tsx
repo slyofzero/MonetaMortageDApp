@@ -3,20 +3,14 @@ import { web3 } from "@/rpc";
 import { useRepaymentStep } from "@/state";
 import { useEffect, useState } from "react";
 import { useSendTransaction } from "wagmi";
-import moment from "moment";
 import { pastDuePenalty, platformCharge } from "@/utils/constants";
-import { roundToSixDecimals } from "@/utils/web3";
-import { clientPoster } from "@/utils/api";
+import { clientFetcher, clientPoster } from "@/utils/api";
 import { LoanApiResponse } from "@/pages/api/loan";
 import { ShowWhen } from "@/components/Utils";
-
-interface RepaymentBreakdown {
-  daysSinceLoan: number;
-  interest: number;
-  penalty: boolean;
-  totalToRepay: number;
-  repaymentUnder24h: boolean;
-}
+import {
+  RepaymentBreakdown,
+  RepaymentBreakdownApiResponse,
+} from "@/pages/api/getRepaymentBreakdown";
 
 const defaultRepaymentBreakdown: RepaymentBreakdown = {
   daysSinceLoan: 0,
@@ -24,12 +18,14 @@ const defaultRepaymentBreakdown: RepaymentBreakdown = {
   penalty: false,
   totalToRepay: 0,
   repaymentUnder24h: false,
+  isMntaHolder: false,
+  interestDiscount: 1,
 };
 
 export function Step1() {
   const { repaymentStepData, setRepaymentStepData } = useRepaymentStep();
   const loan = repaymentStepData.loan as FEStoredLoan;
-  const { ethLent, loanActiveAt, duration } = loan;
+  const { ethLent } = loan;
   const mainWalletAddress = String(
     process.env.NEXT_PUBLIC_VAULT_ADDRESS
   ) as `0x${string}`;
@@ -41,32 +37,20 @@ export function Step1() {
 
   // Calculate amount to repay
   useEffect(() => {
-    const currentTime = moment();
-    const loanActiveTimestamp = moment.unix(loanActiveAt._seconds);
-    const daysSinceLoan = currentTime.diff(loanActiveTimestamp, "days");
-    const applyPenalty = daysSinceLoan > duration;
-    const interest = applyPenalty
-      ? daysSinceLoan + pastDuePenalty
-      : daysSinceLoan;
+    const getRepaymentBreakdown = async () => {
+      const response = await clientFetcher<RepaymentBreakdownApiResponse>(
+        `/api/getRepaymentBreakdown?loan=${loan.id}`
+      );
+      const breakdown = response.data.breakdown;
+      if (breakdown) setRepaymentBreakdownData(breakdown);
+    };
 
-    // Platform charge
-    const repaymentUnder24h = daysSinceLoan === 0;
-    const loanPlatformCharge = repaymentUnder24h ? platformCharge : 0;
-
-    const totalToRepay = roundToSixDecimals(
-      ethLent * (1 + interest / 100) + loanPlatformCharge
-    );
-
-    setRepaymentBreakdownData({
-      daysSinceLoan,
-      interest,
-      penalty: applyPenalty,
-      totalToRepay,
-      repaymentUnder24h: daysSinceLoan === 0,
-    });
-  }, [duration, loanActiveAt, ethLent]);
+    getRepaymentBreakdown();
+  }, [loan]);
 
   const repay = () => {
+    if (repaymentBreakdownData === defaultRepaymentBreakdown) return;
+
     sendTransaction({
       to: mainWalletAddress,
       value: BigInt(web3.utils.toWei(totalToRepay, "ether")),
@@ -99,8 +83,14 @@ export function Step1() {
     [isSuccess, data]
   );
 
-  const { daysSinceLoan, penalty, totalToRepay, repaymentUnder24h } =
-    repaymentBreakdownData;
+  const {
+    daysSinceLoan,
+    penalty,
+    totalToRepay,
+    repaymentUnder24h,
+    interestDiscount,
+    isMntaHolder,
+  } = repaymentBreakdownData;
 
   const paymentBreakdown = (
     <div className="flex flex-col gap-8 items-center justify-center text-sm lg:text-base whitespace-nowrap flex-wrap">
@@ -116,7 +106,8 @@ export function Step1() {
 
         <span className="font-semibold">Interest</span>
         <span className="ml-auto">
-          {daysSinceLoan} * 1% {penalty && `+ ${pastDuePenalty}%`}
+          {daysSinceLoan * interestDiscount} * 1%{" "}
+          {penalty && `+ ${pastDuePenalty * interestDiscount}%`}
         </span>
 
         <ShowWhen
@@ -136,6 +127,17 @@ export function Step1() {
           {totalToRepay} ETH
         </span>
       </div>
+
+      <ShowWhen
+        component={
+          <div className="flex gap-4 justify-center text-yellow-400 -mb-4">
+            <span>
+              MNTA Holder Interest Discount, {interestDiscount * 100}% off
+            </span>
+          </div>
+        }
+        when={isMntaHolder}
+      />
 
       <button
         className="bg-white text-black rounded-lg px-4 py-2 font-semibold"

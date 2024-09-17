@@ -4,18 +4,20 @@ import {
 } from "./api/stats";
 import { MainLayout } from "@/components";
 import { useApi } from "@/hooks/useApi";
-import { apiFetcher } from "@/utils/api";
 import { roundToSixDecimals } from "@/utils/web3";
-import { GetStaticProps } from "next";
 
-interface Props {
-  fallbackData: VaultStatsApiResponse;
-}
+const defaultStats: VaultStatsScriptApiResponse = {
+  interestEarned: 0,
+  loanCount: 0,
+  loanValue: 0,
+  tokensValue: 0,
+  vaultEth: 0,
+};
 
-export default function StatsPage({ fallbackData }: Props) {
+export default function StatsPage() {
   const { data } = useApi<VaultStatsApiResponse>("/api/stats");
 
-  const stats = data?.data || fallbackData;
+  const stats = data?.data || defaultStats;
 
   //   const { data: stats } = data as VaultStatsApiResponse;
   const { vaultEth, interestEarned, loanValue, loanCount, tokensValue } =
@@ -88,15 +90,15 @@ export default function StatsPage({ fallbackData }: Props) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const { data } = await apiFetcher<VaultStatsApiResponse>(
-    `http://localhost:3000/api/stats`
-  );
+// export const getStaticProps: GetStaticProps = async () => {
+//   const { data } = await apiFetcher<VaultStatsApiResponse>(
+//     `http://localhost:3000/api/stats`
+//   );
 
-  return {
-    props: {
-      fallbackData: data.data,
-    },
-    revalidate: 10, // Optional: Revalidate every 10 seconds for ISR
-  };
-};
+//   return {
+//     props: {
+//       fallbackData: data.data,
+//     },
+//     revalidate: 60, // Optional: Revalidate every 10 seconds for ISR
+//   };
+// };

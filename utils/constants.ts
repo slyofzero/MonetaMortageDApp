@@ -477,6 +477,34 @@ export const collateralTokensList: ICollateralTokensList = {
     logoURI:
       "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/BODE.webp",
   },
+  "0x5dA151B95657e788076D04d56234Bd93e409CB09": {
+    name: "OTSea",
+    symbol: "OTSea",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/OTSea.webp",
+  },
+  "0xda558A295e8D2C1438F7b4806e283940dec7e6Db": {
+    name: "Tracker AI",
+    symbol: "TRACK",
+    decimals: 9,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/TRACK.webp",
+  },
+  "0xfefe274de1983102d4565b7f14018602d2c830b9": {
+    name: "SikaSwap",
+    symbol: "$SIKA",
+    decimals: 18,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/$SIKA.webp",
+  },
+  "0x4cB1e6c430Bb4b874869Fd6049ed07aE975b02f1": {
+    name: "BNDR",
+    symbol: "SWIPES",
+    decimals: 9,
+    logoURI:
+      "https://raw.githubusercontent.com/slyofzero/MonetaTokensList/main/assets/SWIPES.webp",
+  },
 };
 
 export const tokensList: { [key: string]: TokenInfo } = {
